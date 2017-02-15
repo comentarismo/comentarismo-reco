@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for comentarismo-reco/server/basic_in_memory_esm.coffee</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">comentarismo-reco/server/</a> basic_in_memory_esm.coffee
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/306</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/84</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/63</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/219</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >bb = require 'bluebird'</span>
+<span class="cstat-no" title="statement not covered" >_ = require 'lodash'</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >moment = require 'moment'</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >event_store = {}</span>
+<span class="cstat-no" title="statement not covered" >person_action_store = {}</span>
+<span class="cstat-no" title="statement not covered" >thing_action_store = {}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >Errors = require './errors'</span>
+&nbsp;
+#This is a simple implementation of an ESM to demonstrate the API and NOT FOR PRODUCTION PURPOSES
+<span class="cstat-no" title="statement not covered" >class <span class="fstat-no" title="function not covered" >BasicInMemoryESM</span></span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  constructor: (options = {}) -&gt;</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  initialize: (namespace) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    event_store[namespace] ||= []</span>
+<span class="cstat-no" title="statement not covered" >    person_action_store[namespace] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >    thing_action_store[namespace] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> )</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  destroy: (namespace) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    delete event_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >    delete person_action_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >    delete thing_action_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> )</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  exists: (namespace) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >=&gt;</span> <span class="cstat-no" title="statement not covered" >!!event_store[namespace]</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  list_namespaces: -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >Object.keys(event_store)</span>)</span>
+  ###########################
+  ####  NEIGHBOURHOOD  ######
+  ###########################
+&nbsp;
+<span class="fstat-no" title="function not covered" >  thing_neighbourhood: (namespace, thing, actions, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >[]</span>)</span> if !actions or actions.length == 0</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    options = _.defaults(options,</span>
+      neighbourhood_size: 100
+      neighbourhood_search_size: 500
+      time_until_expiry: 0
+      current_datetime: new Date()
+    )
+<span class="cstat-no" title="statement not covered" >    options.actions = actions</span>
+<span class="cstat-no" title="statement not covered" >    options.expires_after = moment(options.current_datetime).add(options.time_until_expiry, 'seconds').format()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    one_degree_away = @_one_degree_away(namespace, 'thing', 'person', thing, _.clone(options))</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    one_degree_away = one_degree_away.filter( <span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >x.thing != thing &amp;&amp; !!x.last_expires_at &amp;&amp; !moment(x.last_expires_at).isBefore(options.expires_after)</span>)</span>
+<span class="cstat-no" title="statement not covered" >    one_degree_away.map( <span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >x.people = _.uniq(x.person)</span>; <span class="cstat-no" title="statement not covered" >delete x.person</span>)</span>
+<span class="cstat-no" title="statement not covered" >    one_degree_away = _.sortBy(one_degree_away, <span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >(<span class="cstat-no" title="statement not covered" >- x.people.length</span>)</span>)</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >one_degree_away</span>[...options.neighbourhood_size])</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  person_neighbourhood: (namespace, person, actions, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >[]</span>)</span> if !actions or actions.length == 0</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    options = _.defaults(options,</span>
+      neighbourhood_size: 100
+      neighbourhood_search_size: 500
+      time_until_expiry: 0
+      current_datetime: new Date()
+    )
+<span class="cstat-no" title="statement not covered" >    options.actions = actions</span>
+<span class="cstat-no" title="statement not covered" >    options.expires_after = moment(options.current_datetime).add(options.time_until_expiry, 'seconds').format()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    one_degree_away = @_one_degree_away(namespace, 'person', 'thing', person, _.clone(options))</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    query_hash = _.clone(options)</span>
+<span class="cstat-no" title="statement not covered" >    query_hash.people = one_degree_away.map(<span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >x</span>.person)</span>
+<span class="cstat-no" title="statement not covered" >    unexpired_events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >x</span>.person for x in @_find_events(namespace, query_hash) when person != x.person</span>)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >_.uniq(unexpired_events)[...options.neighbourhood_size]</span>)</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _one_degree_away: (namespace, column1, column2, value, options) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    search_hash = {</span>
+      current_datetime: options.current_datetime
+      actions: options.actions
+      size: options.neighbourhood_search_size
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    search_hash_1 = _.clone(search_hash)</span>
+<span class="cstat-no" title="statement not covered" >    search_hash_1[column1] = value</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    ret = {}</span>
+<span class="cstat-no" title="statement not covered" >    for x in @_find_events(namespace, search_hash_1)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      search_hash_2 = _.clone(search_hash)</span>
+<span class="cstat-no" title="statement not covered" >      search_hash_2[column2] = x[column2]</span>
+<span class="cstat-no" title="statement not covered" >      for y in @_find_events(namespace, search_hash_2)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if ret[y[column1]] == undefined</span>
+<span class="cstat-no" title="statement not covered" >          ret[y[column1]] = {</span>
+<span class="cstat-no" title="statement not covered" >            "#{<span class="cstat-no" title="statement not covered" >column1</span>}</span>": y[column1]
+<span class="cstat-no" title="statement not covered" >            "#{<span class="cstat-no" title="statement not covered" >column2</span>}</span>": [y[column2]]
+            last_actioned_at: y.created_at
+            last_expires_at: y.expires_at
+          }
+        else
+<span class="cstat-no" title="statement not covered" >          ret[y[column1]][column2].push(y[column2])</span>
+<span class="cstat-no" title="statement not covered" >          ret[y[column1]].last_actioned_at = moment.max(moment(ret[y[column1]].last_actioned_at), moment(y.created_at)).utc()</span>
+<span class="cstat-no" title="statement not covered" >          ret[y[column1]].last_expires_at = moment.max(moment(ret[y[column1]].last_expires_at), moment(y.expires_at)).utc()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    _.values(ret)</span>
+&nbsp;
+  ##################################
+  ####  END OF NEIGHBOURHOOD  ######
+  ##################################
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _cosine_distance: (namespace, column1, column2, v1, v2, actions, now, limit, event_decay_rate) -&gt;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    search1 = {current_datetime: now}</span>
+<span class="cstat-no" title="statement not covered" >    search2 = {current_datetime: now}</span>
+<span class="cstat-no" title="statement not covered" >    search1[column1] = v1</span>
+<span class="cstat-no" title="statement not covered" >    search2[column1] = v2</span>
+<span class="cstat-no" title="statement not covered" >    search1.actions = Object.keys(actions)</span>
+<span class="cstat-no" title="statement not covered" >    search2.actions = Object.keys(actions)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    p1_values = {}</span>
+<span class="cstat-no" title="statement not covered" >    for e in @_find_events(namespace, search1)[...limit]</span>
+<span class="cstat-no" title="statement not covered" >      weight = actions[e.action]</span>
+<span class="cstat-no" title="statement not covered" >      days = Math.round(moment.duration(moment(now).diff(e.created_at)).asDays())</span>
+<span class="cstat-no" title="statement not covered" >      n_weight = weight * Math.pow(event_decay_rate,-days)</span>
+<span class="cstat-no" title="statement not covered" >      p1_values[e[column2]] = n_weight</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    p2_values = {}</span>
+<span class="cstat-no" title="statement not covered" >    for e in @_find_events(namespace, search2)[...limit]</span>
+<span class="cstat-no" title="statement not covered" >      weight = actions[e.action]</span>
+<span class="cstat-no" title="statement not covered" >      days = Math.round(moment.duration(moment(now).diff(e.created_at)).asDays())</span>
+<span class="cstat-no" title="statement not covered" >      n_weight = weight * Math.pow(event_decay_rate,-days)</span>
+<span class="cstat-no" title="statement not covered" >      p2_values[e[column2]] = n_weight</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    numerator = 0</span>
+<span class="cstat-no" title="statement not covered" >    for value, weight of p1_values</span>
+<span class="cstat-no" title="statement not covered" >      if p2_values[value]</span>
+<span class="cstat-no" title="statement not covered" >        numerator += weight * p2_values[value]</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    denominator_1 = 0</span>
+<span class="cstat-no" title="statement not covered" >    for value, weight of p1_values</span>
+<span class="cstat-no" title="statement not covered" >      denominator_1 += Math.pow(weight,2)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    denominator_2 = 0</span>
+<span class="cstat-no" title="statement not covered" >    for value, weight of p2_values</span>
+<span class="cstat-no" title="statement not covered" >      denominator_2 += Math.pow(weight,2)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    cosinse_similarity = numerator/(<span class="cstat-no" title="statement not covered" >Math.sqrt(denominator_1)*Math.sqrt(denominator_2)</span>)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return cosinse_similarity</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _similarities: (namespace, column1, column2, value, values, actions, options={}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >{}</span>)</span> if values.length == 0</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    options = _.defaults(options,</span>
+      similarity_search_size: 500
+      current_datetime: new Date()
+      event_decay_rate: 1
+    )
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    similarities = {}</span>
+<span class="cstat-no" title="statement not covered" >    for v in values</span>
+<span class="cstat-no" title="statement not covered" >      similarities[v] =  @_cosine_distance(namespace, column1, column2, value, v, actions, options.current_datetime, options.similarity_search_size, options.event_decay_rate)</span>
+<span class="cstat-no" title="statement not covered" >      similarities[v] = similarities[v] || 0</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >similarities</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  calculate_similarities_from_person: (namespace, person, people, actions, options={}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    @_similarities(namespace, 'person', 'thing', person, people, actions, options)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  calculate_similarities_from_thing: (namespace, person, people, actions, options={}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    @_similarities(namespace, 'thing', 'person', person, people, actions, options)</span>
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _recent_events: (namespace, column1, actions, values, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >[]</span>)</span> if values.length == 0 || actions.length == 0</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    options = _.defaults(options,</span>
+      recommendations_per_neighbour: 10
+      time_until_expiry: 0
+      current_datetime: new Date()
+    )
+<span class="cstat-no" title="statement not covered" >    options.actions = actions</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    all_events = []</span>
+<span class="cstat-no" title="statement not covered" >    for v in values</span>
+<span class="cstat-no" title="statement not covered" >      query_hash = {actions: actions}</span>
+<span class="cstat-no" title="statement not covered" >      query_hash[column1] = v</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      events = @_find_events(namespace, _.extend(query_hash, options))[...options.recommendations_per_neighbour]</span>
+<span class="cstat-no" title="statement not covered" >      all_events = all_events.concat events</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    group_by_person_thing = {}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    for event in all_events</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      group_by_person_thing[event.person] = {}</span> if not group_by_person_thing[event.person]</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      group_by_person_thing[event.person][event.thing] = {}</span> if not group_by_person_thing[event.person][event.thing]</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      last_actioned_at = group_by_person_thing[event.person][event.thing].last_actioned_at || event.created_at</span>
+<span class="cstat-no" title="statement not covered" >      last_actioned_at = moment.max(moment(last_actioned_at), moment(event.created_at)).utc()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      last_expires_at = group_by_person_thing[event.person][event.thing].last_expires_at || event.expires_at</span>
+<span class="cstat-no" title="statement not covered" >      last_expires_at = moment.max(moment(last_expires_at), moment(event.expires_at)).utc()</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      group_by_person_thing[event.person][event.thing] = {</span>
+        person: event.person
+        thing: event.thing
+        last_actioned_at: last_actioned_at
+        last_expires_at: last_expires_at
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    grouped_events = []</span>
+<span class="cstat-no" title="statement not covered" >    for person, thing_events of group_by_person_thing</span>
+<span class="cstat-no" title="statement not covered" >      for thing, event of thing_events</span>
+<span class="cstat-no" title="statement not covered" >        grouped_events = grouped_events.concat event</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    grouped_events = _.sortBy(grouped_events, <span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >(<span class="cstat-no" title="statement not covered" >- x.last_actioned_at.getTime()</span>)</span>)</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >grouped_events</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  recent_recommendations_by_people: (namespace, actions, people, options) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    @_recent_events(namespace, 'person', actions, people, options)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _filter_things_by_previous_action: (namespace, person, things, action) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    things.filter(<span class="fstat-no" title="function not covered" >(t) =&gt;</span> <span class="cstat-no" title="statement not covered" >!person_action_store[namespace][person] or !person_action_store[namespace][person][action] or !person_action_store[namespace][person][action][t]</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  filter_things_by_previous_actions: (namespace, person, things, actions) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >things</span>)</span> if !actions or actions.length == 0 or things.length == 0</span>
+<span class="cstat-no" title="statement not covered" >    filtered_things = things</span>
+<span class="cstat-no" title="statement not covered" >    for action in actions</span>
+<span class="cstat-no" title="statement not covered" >      filtered_things = _.intersection(filtered_things, @_filter_things_by_previous_action(namespace, person, things, action))</span>
+<span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >filtered_things</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  add_events: (events) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    promises = []</span>
+<span class="cstat-no" title="statement not covered" >    for e in events</span>
+<span class="cstat-no" title="statement not covered" >      promises.push @add_event(e.namespace, e.person, e.action, e.thing, {created_at: e.created_at, expires_at: e.expires_at})</span>
+<span class="cstat-no" title="statement not covered" >    bb.all(promises)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  add_event: (namespace, person, action, thing, dates = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    if !event_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >      return bb.try( <span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >throw new Errors.NamespaceDoestNotExist()</span>)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    created_at = moment(dates.created_at || new Date()).utc()</span>
+<span class="cstat-no" title="statement not covered" >    expires_at = if dates.expires_at then <span class="cstat-no" title="statement not covered" >moment(new Date(dates.expires_at)).utc()</span> else <span class="cstat-no" title="statement not covered" >null</span></span>
+<span class="cstat-no" title="statement not covered" >    found_event = @_find_event(namespace, person, action, thing)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if found_event</span>
+<span class="cstat-no" title="statement not covered" >      found_event.created_at = if created_at &gt; found_event.created_at then <span class="cstat-no" title="statement not covered" >created_at</span> else <span class="cstat-no" title="statement not covered" >found_event</span>.created_at</span>
+<span class="cstat-no" title="statement not covered" >      found_event.expires_at = if expires_at &amp;&amp; expires_at &gt; found_event.expires_at then <span class="cstat-no" title="statement not covered" >expires_at</span> else <span class="cstat-no" title="statement not covered" >found_event</span>.expires_at</span>
+    else
+<span class="cstat-no" title="statement not covered" >      e = {person: person, action: action, thing: thing, created_at: created_at, expires_at: expires_at}</span>
+<span class="cstat-no" title="statement not covered" >      event_store[namespace].push e</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      person_action_store[namespace][person] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >      person_action_store[namespace][person][action] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >      person_action_store[namespace][person][action][thing] = e</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      thing_action_store[namespace][thing] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >      thing_action_store[namespace][thing][action] ||= {}</span>
+<span class="cstat-no" title="statement not covered" >      thing_action_store[namespace][thing][action][person] = e</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >true</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  count_events: (namespace) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >=&gt;</span>  <span class="cstat-no" title="statement not covered" >event_store</span>[namespace].length)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  estimate_event_count: (namespace) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >=&gt;</span> <span class="cstat-no" title="statement not covered" >event_store</span>[namespace].length)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _find_event: (namespace, person, action, thing) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return null</span> if not person_action_store[namespace][person]</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return null</span> if not person_action_store[namespace][person][action]</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return null</span> if not person_action_store[namespace][person][action][thing]</span>
+<span class="cstat-no" title="statement not covered" >    return person_action_store[namespace][person][action][thing]</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _filter_event: (e, options) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    return false</span> if !e</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    add = true</span>
+<span class="cstat-no" title="statement not covered" >    if moment(options.current_datetime).isBefore(e.created_at)</span>
+<span class="cstat-no" title="statement not covered" >      add = false</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.expires_after &amp;&amp; (<span class="cstat-no" title="statement not covered" >!e.expires_at || moment(e.expires_at).isBefore(options.expires_after)</span>)</span>
+<span class="cstat-no" title="statement not covered" >      add = false</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.people</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if not _.contains(options.people, e.person)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.person</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if options.person != e.person</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.actions</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if not _.contains(options.actions, e.action)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.action</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if options.action != e.action</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.things</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if not _.contains(options.things, e.thing)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.thing</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      add = false</span> if options.thing != e.thing</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    add</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _find_events: (namespace, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    options = _.defaults(options,</span>
+      size: 50
+      page: 0
+      current_datetime: new Date()
+    )
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    options.expires_after = moment(options.current_datetime).add(options.time_until_expiry, 'seconds').format()</span> if options.time_until_expiry != undefined</span>
+&nbsp;
+    #returns all events fitting the above description
+<span class="cstat-no" title="statement not covered" >    events = []</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if options.person and options.action and options.thing</span>
+<span class="cstat-no" title="statement not covered" >      e = person_action_store[namespace]?[options.person]?[options.action]?[options.thing]</span>
+<span class="cstat-no" title="statement not covered" >      events = [e]</span>
+    else <span class="cstat-no" title="statement not covered" >if options.person and options.action</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t, e of person_action_store[namespace]?[options.person]?[options.action]</span>)</span>
+    else <span class="cstat-no" title="statement not covered" >if options.thing and options.action</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t, e of thing_action_store[namespace]?[options.thing]?[options.action]</span>)</span>
+    else <span class="cstat-no" title="statement not covered" >if options.person</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t,e of ats</span> for at, ats of person_action_store[namespace]?[options.person]</span>)</span>
+    else <span class="cstat-no" title="statement not covered" >if options.thing</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t,e of ats</span> for at, ats of thing_action_store[namespace]?[options.thing]</span>)</span>
+    else <span class="cstat-no" title="statement not covered" >if options.people</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t,e of ats</span> for at, ats of person_action_store[namespace]?[thth]</span> for thth in options.people</span>)</span>
+    else <span class="cstat-no" title="statement not covered" >if options.things</span>
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for t,e of ats</span> for at, ats of thing_action_store[namespace]?[thth]</span> for thth in options.things</span>)</span>
+    else
+<span class="cstat-no" title="statement not covered" >      events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for e in event_store[namespace]</span>)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    events = _.flatten(events, true)</span>
+<span class="cstat-no" title="statement not covered" >    events = (<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >e</span> for e in events when @_filter_event(e, options)</span>)</span>
+<span class="cstat-no" title="statement not covered" >    events = _.sortBy(events, <span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >(<span class="cstat-no" title="statement not covered" >- x.created_at.getTime()</span>)</span>)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    events = events[options.size*options.page ... options.size*(<span class="cstat-no" title="statement not covered" >options.page+1</span>)]</span>
+<span class="cstat-no" title="statement not covered" >    return events</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  find_events: (namespace, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    return bb.try(<span class="fstat-no" title="function not covered" >=&gt;</span> <span class="cstat-no" title="statement not covered" >@_find_events(namespace, options)</span>)</span>
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >  pre_compact: -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >true</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  _delete_events: (namespace, events) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    event_store[namespace] = event_store[namespace].filter(<span class="fstat-no" title="function not covered" >(x) -&gt;</span> <span class="cstat-no" title="statement not covered" >x not in events</span>)</span>
+<span class="cstat-no" title="statement not covered" >    for e in events</span>
+<span class="cstat-no" title="statement not covered" >      delete person_action_store[namespace][e.person][e.action][e.thing]</span>
+<span class="cstat-no" title="statement not covered" >      delete thing_action_store[namespace][e.thing][e.action][e.person]</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  delete_events: (namespace, options = {}) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    events = @_find_events(namespace, person: options.person, action: options.action, thing: options.thing)</span>
+<span class="cstat-no" title="statement not covered" >    @_delete_events(namespace, events)</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >=&gt;</span> <span class="cstat-no" title="statement not covered" >{deleted: events.length}</span>)</span>
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >  compact_people: (namespace, limit, actions) -&gt;</span>
+    #remove all
+<span class="cstat-no" title="statement not covered" >    marked_for_deletion = []</span>
+<span class="cstat-no" title="statement not covered" >    for person, action_store of person_action_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >      for action in actions</span>
+<span class="cstat-no" title="statement not covered" >        events = @_find_events(namespace, person: person, action: action)</span>
+<span class="cstat-no" title="statement not covered" >        if events.length &gt; limit</span>
+<span class="cstat-no" title="statement not covered" >          marked_for_deletion = marked_for_deletion.concat events[limit..-1]</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    @_delete_events(namespace, marked_for_deletion)</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >true</span>)</span>
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >  compact_things: (namespace, limit, actions) -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    marked_for_deletion = []</span>
+<span class="cstat-no" title="statement not covered" >    for thing, action_store of thing_action_store[namespace]</span>
+<span class="cstat-no" title="statement not covered" >      for action in actions</span>
+<span class="cstat-no" title="statement not covered" >        events = @_find_events(namespace, thing: thing, action: action)</span>
+<span class="cstat-no" title="statement not covered" >        if events.length &gt; limit</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >          marked_for_deletion = marked_for_deletion.concat events[limit..-1]</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    @_delete_events(namespace, marked_for_deletion)</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >true</span>)</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  post_compact: -&gt;</span>
+<span class="cstat-no" title="statement not covered" >    bb.try(<span class="fstat-no" title="function not covered" >-&gt;</span> <span class="cstat-no" title="statement not covered" >true</span>)</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >module.exports = BasicInMemoryESM</span>;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 15 2017 20:22:42 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for comentarismo-reco/server/api.coffee</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">comentarismo-reco/server/</a> api.coffee
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">89.53% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>77/86</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">86.21% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>25/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">90.91% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>70/77</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span></td><td class="text"><pre class="prettyprint lang-js">bb = require 'bluebird'
+_ = require "underscore"
+&nbsp;
+Joi = require 'joi'
+Boom = require 'boom'
+&nbsp;
+# RECO
+reco = require './reco'
+&nbsp;
+RECO = reco.RECO
+&nbsp;
+namespace_schema = Joi.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/)
+&nbsp;
+namespace_request_schema = Joi.object().keys({
+  namespace: namespace_schema.required()
+})
+&nbsp;
+configuration_schema = Joi.object().keys({
+  actions:                       Joi.object()
+  minimum_history_required:      Joi.number().integer().min(0)
+  neighbourhood_search_size:     Joi.number().integer().min(1).max(250)
+  similarity_search_size:        Joi.number().integer().min(1).max(250)
+  neighbourhood_size:            Joi.number().integer().min(1).max(250)
+  recommendations_per_neighbour: Joi.number().integer().min(1).max(250)
+  filter_previous_actions:       Joi.array().items(Joi.string())
+  event_decay_rate:              Joi.number().min(1).max(10)
+  time_until_expiry:             Joi.number().integer().min(0).max(2678400) #seconds in a month
+  current_datetime:              Joi.date().iso()
+  post_process_with:             Joi.array()
+})
+&nbsp;
+recommendation_request_schema = Joi.object().keys({
+  count: Joi.number().integer().min(1).max(200)
+  person: Joi.string()
+  thing:  Joi.string()
+  namespace: namespace_schema.required()
+  configuration: configuration_schema
+}).xor('person', 'thing')
+&nbsp;
+event_schema = Joi.object().keys({
+  namespace: namespace_schema.required()
+  person: Joi.string().required()
+  action: Joi.string().required()
+  thing: Joi.string().required()
+  created_at: Joi.date().iso()
+  expires_at: Joi.date().iso()
+})
+&nbsp;
+events_request_schema = Joi.object().keys({
+  events: Joi.array().items(event_schema).required()
+})
+&nbsp;
+get_events_request_schema = event_schema = Joi.object().keys({
+  namespace: namespace_schema.required()
+  person: Joi.string()
+  action: Joi.string()
+  thing: Joi.string()
+})
+&nbsp;
+&nbsp;
+Utils = {}
+&nbsp;
+Utils.handle_error = (logger, err, reply) -&gt;
+  console.log "handle_error -&gt; ", err.stack
+  <span class="missing-if-branch" title="else path not taken" >E</span>if err.isBoom
+    logger.log(['error'], err)
+    reply(err)
+  else
+<span class="cstat-no" title="statement not covered" >    logger.log(['error'], {error: <span class="cstat-no" title="statement not covered" >"#{<span class="cstat-no" title="statement not covered" >err</span>}</span>", stack: err.stack})</span>
+<span class="cstat-no" title="statement not covered" >    reply({error: "An unexpected error occurred"}).code(500)</span>
+&nbsp;
+&nbsp;
+&nbsp;
+API =
+  register: (plugin, options, next) -&gt;
+    reco = options.reco
+    default_configuration = options.default_configuration || {}
+&nbsp;
+    ########### NAMESPACE routes ################
+    plugin.route(
+      method: 'GET',
+      path: '/namespaces',
+      handler: (request, reply) =&gt;
+        reco.list_namespaces()
+        .then( (namespaces) -&gt;
+          reply({namespaces: namespaces})
+        )
+        .catch(<span class="fstat-no" title="function not covered" >(err) -&gt;</span> <span class="cstat-no" title="statement not covered" >Utils.handle_error(request, err, reply)</span> )
+    )
+&nbsp;
+    plugin.route(
+      method: 'DELETE',
+      path: '/namespaces/{namespace}',
+      handler: (request, reply) =&gt;
+        namespace = request.params.namespace
+        reco.namespace_exists(namespace)
+        .then( (exists) -&gt;
+          throw Boom.notFound() if !exists
+          reco.destroy_namespace(namespace)
+        )
+        .then( -&gt;
+          reply({namespace: namespace})
+        )
+        .catch((err) -&gt; Utils.handle_error(request, err, reply) )
+    )
+&nbsp;
+    plugin.route(
+      method: 'POST',
+      path: '/namespaces',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: namespace_request_schema
+&nbsp;
+      handler: (request, reply) =&gt;
+        console.log "namespaces -&gt; request.payload, ",request.payload
+        namespace = request.payload.namespace
+        reco.initialize_namespace(namespace)
+        .then( -&gt;
+          reply({namespace: namespace})
+        )
+        .catch(<span class="fstat-no" title="function not covered" >(err) -&gt;</span> <span class="cstat-no" title="statement not covered" >Utils.handle_error(request, err, reply)</span> )
+    )
+&nbsp;
+    ########### EVENTS routes ################
+&nbsp;
+    #POST create event
+    plugin.route(
+      method: 'POST',
+      path: '/events',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: events_request_schema
+      handler: (request, reply) =&gt;
+        reco.events(request.payload.events)
+        .then( (event) -&gt;
+          reply(request.payload)
+        )
+        .catch(RECO.NamespaceDoestNotExist, (err) -&gt;
+          console.log "POST create event, ",err
+          Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
+        )
+        .catch(<span class="fstat-no" title="function not covered" >(err) -&gt;</span> <span class="cstat-no" title="statement not covered" >Utils.handle_error(request, err, reply)</span> )
+    )
+&nbsp;
+    #GET event information
+    plugin.route(
+      method: 'GET',
+      path: '/events',
+      config:
+        validate:
+          query: get_events_request_schema
+&nbsp;
+      handler: (request, reply) =&gt;
+        query = {
+          person: request.query.person,
+          action: request.query.action,
+          thing: request.query.thing
+        }
+        reco.find_events(request.query.namespace, query)
+        .then( (events) -&gt;
+          reply({"events": events})
+        )
+        .catch(<span class="fstat-no" title="function not covered" >(err) -&gt;</span> <span class="cstat-no" title="statement not covered" >Utils.handle_error(request, err, reply)</span> )
+    )
+&nbsp;
+&nbsp;
+    ########### RECOMMENDATIONS routes ################
+&nbsp;
+    #POST recommendations
+    plugin.route(
+      method: 'POST',
+      path: '/recommendations',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: recommendation_request_schema
+      handler: (request, reply) =&gt;
+&nbsp;
+        person = request.payload.person
+        thing = request.payload.thing
+        namespace = request.payload.namespace
+        configuration = _.defaults(request.payload.configuration, default_configuration)
+&nbsp;
+        reco.namespace_exists(namespace)
+        .then( (exists) -&gt;
+          throw Boom.notFound() if !exists
+          <span class="missing-if-branch" title="if path not taken" >I</span>if thing
+<span class="cstat-no" title="statement not covered" >            promise = reco.recommendations_for_thing(namespace, thing, configuration)</span>
+          else
+            promise = reco.recommendations_for_person(namespace, person, configuration)
+&nbsp;
+          promise
+        )
+        .then( (recommendations) -&gt;
+          reply(recommendations)
+        )
+        .catch((err) -&gt; Utils.handle_error(request, err, reply))
+    )
+&nbsp;
+    ########### Maintenance routes ################
+    plugin.route(
+      method: 'POST',
+      path: '/compact',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: namespace_request_schema
+&nbsp;
+      handler: (request, reply) =&gt;
+        ns = request.payload.namespace
+        reco.namespace_exists(ns)
+        .then( (exists) -&gt;
+          throw Boom.notFound() if !exists
+          reco.estimate_event_count(ns)
+        )
+        .then( (init_count) -&gt;
+          bb.all( [init_count, reco.compact_database(ns)] )
+        )
+        .spread((init_count) -&gt;
+          bb.all( [ init_count, reco.estimate_event_count(ns)] )
+        )
+        .spread((init_count, end_count) -&gt;
+          reply({ init_count: init_count, end_count: end_count, compression: "#{(1 - (end_count/init_count)) * 100}%" })
+        )
+        .catch((err) -&gt; Utils.handle_error(request, err, reply) )
+    )
+&nbsp;
+    next()
+&nbsp;
+&nbsp;
+API.register.attributes =
+  name: 'API'
+  version: '1.0.0'
+&nbsp;
+module.exports = API</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Feb 15 2017 20:22:42 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
