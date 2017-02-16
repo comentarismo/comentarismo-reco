@@ -15,12 +15,13 @@ ret_esm = require './reco-rethinkdb'
 RethinkDBESM = ret_esm.esm
 r = ret_esm.r
 
-#MemESM = require('./basic_in_memory_esm')
+MemESM = require('./basic_in_memory_esm')
 
 
 REDIS_HOST = process.env.REDIS_HOST || "g7-box"
 REDIS_PORT = process.env.REDIS_PORT || 6379
 REDIS_PASS = process.env.REDIS_PASSWORD || ""
+CACHE_ENABLED = process.env.CACHE_ENABLED || false
 
 RETHINKDB_HOST = process.env.RETHINKDB_HOST || 'g7-box'
 RETHINKDB_PORT = process.env.RETHINKDB_PORT || 28015
@@ -67,18 +68,21 @@ class ServerRecommendationEngine
 
   init_server: (esm = 'rethinkdb') ->
     #SETUP SERVER
-    @_server = new Hapi.Server(
-#      {
-#      cache: [{
-#        name: 'redisCache',
-#        engine: require('catbox-redis'),
-#        host: REDIS_HOST,
-#        port: REDIS_PORT,
-#        password: REDIS_PASS
-#        partition: 'cache'
-#      }]
-#    }
-    )
+
+    if CACHE_ENABLED
+      @_server = new Hapi.Server({
+        cache: [{
+          name: 'redisCache',
+          engine: require('catbox-redis'),
+          host: REDIS_HOST,
+          port: REDIS_PORT,
+          password: REDIS_PASS
+          partition: 'cache'
+        }]
+      })
+    else
+      @_server = new Hapi.Server()
+
     @_server.connection({port: @options.port});
     @info = @_server.info
 

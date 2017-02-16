@@ -1,4 +1,4 @@
-# Comentarismo GER
+# Comentarismo RECO
 
 # Install
 `npm install`
@@ -9,31 +9,37 @@
 ## Prepare databases
 `RETHINKDB_HOST=localhost node restart_db.js`
 
-# Run GER with RethinkDB
+# Run RECO with RethinkDB
 ```
-$ make ger
-
-lsof -i tcp:3456 | awk 'NR!=1 {print }' | xargs kill | true
-sleep 2
-nohup hapiger --es rethinkdb --esoptions '{"host":"g7-box","port": 28015,"db":"hapiger"}' &.
-/bin/sh: line 0: .: filename argument required
-.: usage: . filename [arguments]
-make: *** [ger] Error 2
-appending output to nohup.out
+npm run start
 ```
 
-# Start ComentarismoGER
-```
-$ make start
+[Comentarismo RECO Localhost](http://localhost:3456/)
 
-node comentarismoger.js
-body-parser deprecated bodyParser: use individual json/urlencoded middlewares comentarismoger.js:29:13
-body-parser deprecated undefined extended: provide extended option node_modules/body-parser/index.js:105:29
-Listening on port 7676
-addr: 10.0.1.22
-GET / 304 517.781 ms - -
-GET /js/jquery-3.1.1.min.js 304 3.494 ms - -
-GET /js/main.js 304 3.827 ms - -
-```
 
-[Comentarismo GER Localhost](http://localhost:7676/)
+# Competition:
+http://www.suggestgrid.com/pricing
+https://www.iprospect.com/en/ca/blog/10-sentiment-analysis-tools-track-social-marketing-success/
+
+
+Promises:
+https://github.com/matthiasg/bluebird-as
+
+
+# ArangoDB
+http://stackoverflow.com/questions/35680537/arangodb-how-to-implement-a-custom-recommendation-engine-using-graph
+
+
+
+https://github.com/arangodb/arangojs#databaseedgecollection
+
+https://www.arangodb.com/2014/12/getting-started-guacamole-rails/
+https://github.com/railsbros-dirk/github_recommender
+https://docs.arangodb.com/3.1/Manual/Graphs/index.html
+https://docs.arangodb.com/3.1/cookbook/Graph/FulldepthTraversal.html
+https://www.arangodb.com/2016/02/using-graphql-nosql-database-arangodb/
+https://github.com/shekhargulati/52-technologies-in-2016/tree/master/27-learn-golang-for-great-good
+https://github.com/arangodb/arangodb/?utm_content=buffer78efd
+
+
+http://stackoverflow.com/questions/34196368/in-arangodb-will-querying-with-filters-from-the-neighbors-be-done-in-on/34203408#34203408
