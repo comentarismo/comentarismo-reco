@@ -17,6 +17,7 @@ r = ret_esm.r
 
 MemESM = require('./basic_in_memory_esm')
 
+PORT = process.env.PORT || 3456
 
 REDIS_HOST = process.env.REDIS_HOST || "g7-box"
 REDIS_PORT = process.env.REDIS_PORT || 6379
@@ -35,7 +36,7 @@ class ServerRecommendationEngine
     @options = _.defaults(options, {
       esm: 'rethinkdb'
       esmoptions: {}
-      port: 3456
+      port: PORT
       logging_options: {
         reporters: {
           myConsoleReporter: [{
