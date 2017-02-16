@@ -1,0 +1,158 @@
+doctype html
+html
+
+  head
+    link(href='http://fonts.googleapis.com/css?family=Raleway:400,200', rel='stylesheet', type='text/css')
+
+    style.
+      body{
+        padding:0;
+        margin:0;
+        font-family: Raleway;
+        line-height: 2em;
+      }
+      .container{
+        width:600px;
+        margin:30px auto;
+        border:1px solid #DDD;
+      }
+      table{
+        width:100%;
+        margin:0;
+        padding:0;
+
+        border-collapse:collapse;
+      }
+
+      td, th{
+        border-collapse:collapse;
+        border-left:1px solid #DDD;
+        vertical-align:top;
+      }
+      th{
+        border-bottom:1px solid #DDD;
+        padding:10px 0;
+      }
+      td:first-child, th:first-child{
+        border-left:none;
+      }
+
+
+
+
+      ul{
+        list-style:none;
+        padding:0;
+        margin:0;
+
+      }
+      li{
+        padding:10px;
+        margin:0;
+        border-bottom:1px solid #DDD;
+      }
+      li:last-child{
+      }
+
+      a{
+        cursor:pointer;
+      }
+
+      .selected{
+        background-color: #EEEEFF;
+      }
+
+      .square, label, input, button, .btn {
+        font-size: inherit;
+        padding: 0.2em 0.4em;
+        margin:0;
+        /* the following ensures they're all using the same box-model for rendering */
+        -moz-box-sizing: border-box; /* or `border-box` */
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-radius:2px;
+        width:100%;
+      }
+      .square{
+        height:20px;
+        width:20px;
+        padding-right:20px;
+      }
+
+
+      .btn, input{
+        border: 1px solid #DDD;
+      }
+
+      .success {
+          padding: 0 0 20px 0;
+          color: #21CCA6;
+          font-size: 12px;
+      }
+
+      .error {
+          color: #ff000e;
+          border: none;
+          margin: 0 0px 20px 0;
+          padding: 0;
+          font-size: 12px;
+      }
+
+      .hidden {
+          display: none !important;
+      }
+
+
+  body
+    .container
+
+      table
+        tr
+          div
+            th(style="width:33%;")
+              | Users
+              input.newUserName
+              a.btn(onclick="addUser();") +
+
+            th(style="width:33%;")
+              | Things
+              input.newThing
+              a.btn(onclick="addItem();") +
+            th(style="width:33%;") Recommendations
+
+        tr
+          td
+            div(style="height:400px; overflow:auto;")
+
+              ul.userList
+                - each u in users
+                  li.user(id="u_#{u._id}")
+                    a.btn(onclick="selectUser('#{u._id}');") #{u.name}
+
+
+          td
+            div(style="height:400px; overflow:auto;")
+
+              ul.itemList
+                - each i in items
+                  li.item(id="i_#{i._id}")
+                    | #{i.thing} &nbsp;&nbsp;&nbsp;
+                    a.btn(onclick="likeItem('#{i._id}');") like
+
+
+          td
+            div(style="height:400px; overflow:auto;" id="recList")
+              ul.recList
+              - each r in recommendations
+                li.recommendation(id="i_#{r.thing}")
+                  | #{r.thing} &nbsp;&nbsp;&nbsp;
+                  a.btn(onclick="likeItem('#{i._id}');") like
+
+  div(class='success' style='display:none')
+  div(class='error' style='display:none')
+
+
+  script(src="/js/jquery-3.1.1.min.js")
+  script(src="/js/main.js")
+
+      

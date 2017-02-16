@@ -1,0 +1,6 @@
+--compilers coffee:coffee-script/register
+--require test/spec_helper
+--require coffee-coverage-loader.js
+--recursive
+--timeout 30000
+--reporter spec
