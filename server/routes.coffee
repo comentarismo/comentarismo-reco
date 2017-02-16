@@ -2,13 +2,7 @@ Datastore = require('nedb')
 hapigerjs = require("hapigerjs")
 util = require('util')
 
-PORT = process.env.PORT || 7676;
-url = process.env.URL || "http://localhost";
-
-client = new hapigerjs.Driver({
-  url: url,
-  port: PORT
-});
+PORT = process.env.PORT || 3456;
 
 bb = require 'bluebird'
 _ = require "underscore"
@@ -16,6 +10,8 @@ _ = require "underscore"
 
 # RECO
 reco = require './reco'
+
+RECO = reco.RECO
 
 
 Utils = {}
@@ -94,7 +90,14 @@ ROUTES =
       ip = "http://" + add + ":" + PORT + "/"
     )
 
-    client.POST("/namespaces", {namespace: "comentarismo"});
+    reco.initialize_namespace("comentarismo")
+      .then( ->
+      console.log("Namespace started -> ",{namespace: "comentarismo"})
+    )
+    .catch((err) ->
+      console.log("ERROR: Could not initialize namespace :O :O :O ... APP WILL EXIT -> ", err)
+      process.exit(1)
+    )
 
     #    // storage
     db.users = new Datastore('db/users.db');
@@ -231,26 +234,22 @@ ROUTES =
                 return reply({error: err})
 
               console.log("db.likes.insert OK -> ", doc)
-              client.POST("/events", {
-                  events: [{
-                    "namespace": "comentarismo",
-                    "person": userId,
-                    "action": "buy",
-                    "thing": itemId,
-                    "expires_at": "2017-03-30"
-                  }]
-                }
-              ).then((response) ->
-                msg = util.format("User %s liked item %s", userId, itemId)
-                console.log("== LIKE ==")
-                console.log(response)
-                console.log("==========")
-                console.log(msg)
-
-                reply({
-                  message: msg
-                });
-              ).catch((err) ->
+              reco.events([{"namespace": "comentarismo","person": userId,"action": "buy","thing": itemId,"expires_at": "2017-03-30"}])
+              .then( (events) ->
+                  msg = util.format("User %s liked item %s", userId, itemId)
+                  console.log("== LIKE ==")
+                  console.log(events)
+                  console.log("==========")
+                  console.log(msg)
+                  reply({
+                    message: msg
+                  });
+              )
+              .catch(RECO.NamespaceDoestNotExist, (err) ->
+                console.log "POST create event, ",err
+                Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
+              )
+              .catch((err) ->
                 console.error("Error: ", err) # Something went wrong
                 reply({message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)})
               )
@@ -272,19 +271,18 @@ ROUTES =
       handler: (request, reply) =>
         #//get userid from session
         userId = request.params.userId;
-        client.POST("/recommendations", {
-            "namespace": "comentarismo",
-            "person": userId,
-            "configuration": {
-              "actions": {"view": 5, "buy": 10}
-            }
-          }
-        ).then((result) ->
-          if (!result || result.length == 0)
-            console.log("== RECOMMEND ERROR ==");
-            console.log("===============");
-            reply({recommendations: []});
-           else
+
+        person = userId
+        namespace = "comentarismo"
+        configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
+
+        reco.recommendations_for_person(namespace, person, configuration)
+          .then( (result) ->
+            if (!result || result.length == 0)
+              console.log("== RECOMMEND ERROR ==");
+              console.log("===============");
+              reply({recommendations: []});
+            else
               console.log("== RECOMMEND OK ==")
               console.log(result)
               console.log("===============")
@@ -296,11 +294,12 @@ ROUTES =
                   else
                     console.log("INFO: resolveItems, ", resolved)
                     reply({recommendations: resolved.recommendations})
-                )
-        ).catch((err) ->
-          console.error("Error: ", err); # // Something went wrong
-          reply({error: err})
-        )
+              )
+          )
+          .catch((err) ->
+            console.error("Error: ", err); # // Something went wrong
+            reply({error: err})
+          )
     )
 
 
