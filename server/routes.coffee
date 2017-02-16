@@ -3,12 +3,11 @@ hapigerjs = require("hapigerjs")
 util = require('util')
 
 PORT = process.env.PORT || 7676;
-url = process.env.HAPIGERJS_URL || "http://localhost";
-port = process.env.HAPIGERJS_PORT || "3456";
+url = process.env.URL || "http://localhost";
 
 client = new hapigerjs.Driver({
   url: url,
-  port: port
+  port: PORT
 });
 
 bb = require 'bluebird'
