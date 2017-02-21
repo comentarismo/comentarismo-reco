@@ -1,6 +1,6 @@
 async_method_tests = require './async_method_tests'
 compact_esm_tests = require './compact_esm_tests'
-ger_integration_tests = require './ger_integration_tests'
+ger_integration_tests = require './all_ger_integration_tests'
 ger_recommendations_for_people_tests = require './ger_recommendations_for_people_tests'
 ger_recommendations_for_things_tests = require './ger_recommendations_for_things_tests'
 

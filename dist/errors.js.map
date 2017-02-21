@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "errors.js",
+  "sourceRoot": "..",
+  "sources": [
+    "server/errors.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,MAAA,8BAAA;IAAA;;;EAAA,MAAA,GAAS;;EAEH;;;IACS,gCAAA;MACX,IAAC,CAAA,IAAD,GAAQ;MACR,IAAC,CAAA,OAAD,GAAW;MACX,KAAK,CAAC,iBAAN,CAAwB,IAAxB,EAA8B,sBAA9B;IAHW;;;;KADsB;;EAMrC,MAAM,CAAC,sBAAP,GAAgC;;EAEhC,MAAM,CAAC,OAAP,GAAiB;AAVjB"
+}

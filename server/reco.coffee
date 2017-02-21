@@ -292,16 +292,6 @@ class RECO
     @esm.remove_events_till_size(namespace, number_of_events)
 
 
-RET = {}
-
-RET.RECO = RECO
-
-RET.MemESM = require('./basic_in_memory_esm')
-
-Errors = require './errors'
-
-RECO.NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
-
-module.exports = RET;
+module.exports = RECO
 
 

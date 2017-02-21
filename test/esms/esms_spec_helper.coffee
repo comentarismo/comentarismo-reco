@@ -2,16 +2,17 @@ chai = require 'chai'
 should = chai.should()
 global.assert = chai.assert
 
+#global._ = require 'underscore'
 global._ = require 'lodash'
 
-req = require '../server/reco-rethinkdb'
-global.RethinkDBESM = req.esm
-global.MemESM = require '../server/basic_in_memory_esm'
-rethinkdbdash = req.r
+global.RethinkDBESM = require '../../server/reco-rethinkdb'
+global.MemESM = require '../../server/basic_in_memory_esm'
+rethinkdbdash = require 'rethinkdbdash'
 
-g = require('../server/reco')
-global.RECO = g.RECO
-NamespaceDoestNotExist = RECO.NamespaceDoestNotExist
+global.RECO = require('../../server/reco')
+
+global.Errors = require '../../server/errors'
+global.NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
 RETHINKDB_HOST = process.env.RETHINKDB_HOST || 'g7-box'
 RETHINKDB_PORT = process.env.RETHINKDB_PORT || 28015
@@ -40,10 +41,10 @@ global.tomorrow = moment().add(1, 'days')
 global.next_week = moment().add(7, 'days')
 
 global.new_esm = (ESM) ->
-  new RethinkDBESM({r: r}, NamespaceDoestNotExist)
+    new ESM({r: r}, NamespaceDoestNotExist)
 
 #prepare databases
-esm = new_esm()
+esm = new_esm(RethinkDBESM)
 bb.all([
   #TODO: find out where to place -> esm.try_delete_db(RETHINKDB_DB),
   esm.try_create_db(RETHINKDB_DB)

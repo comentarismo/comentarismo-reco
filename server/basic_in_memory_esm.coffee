@@ -102,8 +102,12 @@ class BasicInMemoryESM
           }
         else
           ret[y[column1]][column2].push(y[column2])
-          ret[y[column1]].last_actioned_at = moment.max(moment(ret[y[column1]].last_actioned_at), moment(y.created_at)).utc()
-          ret[y[column1]].last_expires_at = moment.max(moment(ret[y[column1]].last_expires_at), moment(y.expires_at)).utc()
+          ret[y[column1]].last_actioned_at = moment.max(moment(ret[y[column1]].last_actioned_at), moment(y.created_at)).toDate()
+
+          if ret[y[column1]].last_expires_at == null
+            ret[y[column1]].last_expires_at = y.expires_at
+          else if y.expires_at != null
+            ret[y[column1]].last_expires_at = moment.max(moment(ret[y[column1]].last_expires_at), moment(y.expires_at)).toDate()
 
     _.values(ret)
 
@@ -201,10 +205,10 @@ class BasicInMemoryESM
       group_by_person_thing[event.person][event.thing] = {} if not group_by_person_thing[event.person][event.thing]
 
       last_actioned_at = group_by_person_thing[event.person][event.thing].last_actioned_at || event.created_at
-      last_actioned_at = moment.max(moment(last_actioned_at), moment(event.created_at)).utc()
+      last_actioned_at = moment.max(moment(last_actioned_at), moment(event.created_at)).toDate()
 
       last_expires_at = group_by_person_thing[event.person][event.thing].last_expires_at || event.expires_at
-      last_expires_at = moment.max(moment(last_expires_at), moment(event.expires_at)).utc()
+      last_expires_at = moment.max(moment(last_expires_at), moment(event.expires_at)).toDate()
 
 
       group_by_person_thing[event.person][event.thing] = {
@@ -245,8 +249,8 @@ class BasicInMemoryESM
     if !event_store[namespace]
       return bb.try( -> throw new Errors.NamespaceDoestNotExist())
 
-    created_at = moment(dates.created_at || new Date()).utc()
-    expires_at = if dates.expires_at then moment(new Date(dates.expires_at)).utc() else null
+    created_at = moment(dates.created_at || new Date()).toDate()
+    expires_at = if dates.expires_at then moment(new Date(dates.expires_at)).toDate() else null
     found_event = @_find_event(namespace, person, action, thing)
 
     if found_event

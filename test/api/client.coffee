@@ -104,42 +104,42 @@ class GERClient
 
 ########### Comentarismo Namespace Website routes ################
 
-  create_user: (name) ->
+  create_user: (namespace, name) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/users/add?name=#{name}"
+      uri: "#{@server_uri}/users/add?name=#{name}&namespace=#{namespace}"
     }
     request(req)
       .then(process_response)
 
-  create_thing: (thing) ->
+  create_thing: (namespace, thing) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/items/add?thing=#{thing}"
+      uri: "#{@server_uri}/items/add?thing=#{thing}&namespace=#{namespace}"
     }
     request(req)
       .then(process_response)
 
-  user_like_thing: (user, thing) ->
+  user_like_thing: (namespace, user, thing) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/users/#{user}/like/#{thing}"
+      uri: "#{@server_uri}/users/#{user}/like/#{thing}?namespace=#{namespace}"
     }
     request(req)
       .then(process_response)
 
-  get_commendations_for_user: (user) ->
+  get_commendations_for_user: (namespace, user) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/users/#{user}/recommend"
+      uri: "#{@server_uri}/users/#{user}/recommend?namespace=#{namespace}"
     }
     request(req)
       .then(process_response)
 
-  get_commendations_for_thing: (thing) ->
+  get_commendations_for_thing: (namespace, thing) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/users/#{thing}/recommend"
+      uri: "#{@server_uri}/thing/#{thing}/recommend?namespace=#{namespace}"
     }
     request(req)
       .then(process_response)

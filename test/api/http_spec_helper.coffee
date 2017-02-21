@@ -4,8 +4,8 @@ chai = require 'chai'
 should = chai.should()
 
 global.bb = require 'bluebird'
-global._ = require 'underscore'
-global._ = require 'lodash'
+#global._ = require 'underscore'
+_ = require 'lodash'
 
 
 global.moment = require 'moment'

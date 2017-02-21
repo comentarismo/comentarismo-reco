@@ -1,4 +1,5 @@
 --compilers coffee:coffee-script/register
+--require test/esms/esms_spec_helper
 --require coffee-coverage-loader.js
 --recursive
 --timeout 30000

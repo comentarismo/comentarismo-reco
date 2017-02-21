@@ -1,0 +1,9 @@
+{
+  "make": {
+    "strategy": "stdoer",
+    "extends": "default",
+    "failure": {
+      "message": "The build has failed!"
+    }
+  }
+}

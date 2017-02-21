@@ -7,8 +7,6 @@ Boom = require 'boom'
 # RECO
 reco = require './reco'
 
-RECO = reco.RECO
-
 namespace_schema = Joi.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/)
 
 namespace_request_schema = Joi.object().keys({
@@ -61,7 +59,7 @@ get_events_request_schema = event_schema = Joi.object().keys({
 Utils = {}
 
 Utils.handle_error = (logger, err, reply) ->
-  console.log "handle_error -> ", err.stack
+#  console.log "handle_error -> ", err.stack
   if err.isBoom
     logger.log(['error'], err)
     reply(err)
@@ -141,8 +139,8 @@ API =
         .then( (event) ->
           reply(request.payload)
         )
-        .catch(RECO.NamespaceDoestNotExist, (err) ->
-          console.log "POST create event, ",err
+        .catch(NamespaceDoestNotExist, (err) ->
+          console.log "Error: POST create event, ",err
           Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
         )
         .catch((err) -> Utils.handle_error(request, err, reply) )

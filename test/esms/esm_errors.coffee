@@ -8,7 +8,7 @@ esm_tests = (ESM) ->
       .then( ->
         throw "SHOULD NOT GET HERE"
       )
-      .catch( RECO.NamespaceDoestNotExist, (e) ->
+      .catch(NamespaceDoestNotExist, (e) ->
         e.message.should.equal "namespace does not exist"
       )
 

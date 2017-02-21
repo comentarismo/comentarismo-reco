@@ -3,6 +3,7 @@ hapigerjs = require("hapigerjs")
 util = require('util')
 
 PORT = process.env.PORT || 3456;
+NAMESPACE = process.env.NAMESPACE || "comentarismo"
 
 bb = require 'bluebird'
 _ = require "underscore"
@@ -11,8 +12,8 @@ _ = require "underscore"
 # RECO
 reco = require './reco'
 
-RECO = reco.RECO
-
+Errors = require './errors'
+NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
 Utils = {}
 
@@ -26,6 +27,7 @@ Utils.handle_error = (logger, err, reply) ->
     reply({error: "An unexpected error occurred"}).code(500)
 
 ########### NAMESPACE funcs ################
+#        TODO: #4 enable namespace filter
 Utils.resolveItems = (result, count, cb) =>
   if (!result || !result.recommendations)
     console.log("Error: resolveItems called with invalid input -> !result || !result.recommendations -> ", result)
@@ -40,42 +42,18 @@ Utils.resolveItems = (result, count, cb) =>
           console.log("Error: db.items.findOne, ", err)
           cb(null, result)
         else
-#// result[count] = doc
           t.thing = doc.thing;
           t._id = doc._id;
           console.log("Transformed thing -> ", t);
-          #    // resolved.push(t)
           count = count + 1;
           Utils.resolveItems(result, count, cb);
       )
 
-Utils.createEvent = (count, events, cb) ->
-  event = events[count];
-  if (!event)
-    return cb()
-
-  createEvent(event, (err) ->
-    if (err)
-      console.log("Error: createEvents --> ", err)
-
-    count = count + 1
-    createEvents(count, events, cb)
-  )
-
-Utils.createEvent = (user, cb) ->
-  client.POST("/events", {
-    events: [user]
-  }).then((err, result) ->
-    if (err)
-      console.log("Error: createUser --> ", err);
-      cb(err)
+Utils.GetNamespace = (request) ->
+    if request.query.namespace
+      request.query.namespace
     else
-      console.log(result);
-      console.log("Event added to DB:");
-      console.log("-------------------------");
-      cb(null, result);
-  )
-
+      NAMESPACE
 
 
 db = {};
@@ -91,12 +69,10 @@ ROUTES =
       ip = "http://" + add + ":" + PORT + "/"
     )
 
-    reco.initialize_namespace("comentarismo")
-      .then( ->
-      console.log("Namespace started -> ",{namespace: "comentarismo"})
-    )
-    .catch((err) ->
-      console.log("ERROR: Could not initialize namespace :O :O :O ... APP WILL EXIT -> ", err)
+    reco.initialize_namespace(NAMESPACE).then(->
+      console.log("Namespace started -> ", {namespace: NAMESPACE})
+    ).catch((err) ->
+      console.log("ERROR: Could not initialize namespace :O :O :O ... APP WILL EXIT -> ", NAMESPACE, err)
       process.exit(1)
     )
 
@@ -118,6 +94,8 @@ ROUTES =
       path: '/',
       handler: (request, reply) =>
 #    // load stuff from database
+#        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
         db.users.find({}, (err, users) ->
           db.items.find({},  (err, items) ->
             reply.view("index", {users:users, items:items, recommendations:[]});
@@ -130,6 +108,9 @@ ROUTES =
       method: 'GET',
       path: '/health',
       handler: (request, reply) =>
+#        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
+
         reply({status: "ok", ip: ip})
           .header("Access-Control-Allow-Origin", "*")
           .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
@@ -142,6 +123,8 @@ ROUTES =
       path: '/clear',
       handler: (request, reply) =>
 
+#        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
 #        //remove
         db.items.remove({}, (err, numRemoved) ->
           console.log("Removed " + numRemoved + " items");
@@ -167,7 +150,9 @@ ROUTES =
       handler: (request, reply) =>
 
 #    // Get user likes (current)
-        userId = request.params.userId;
+        userId = request.params.userId
+        #        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
 
         db.likes.find({userId: userId}, (err, items) ->
           if (err)
@@ -186,6 +171,9 @@ ROUTES =
       path: '/users/add',
       handler: (request, reply) =>
         name = request.query.name
+        #        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
+
   #    // add user to DB
         db.users.insert({name: name}, (err, doc) ->
           if (err)
@@ -207,7 +195,10 @@ ROUTES =
       path: '/items/add',
       handler: (request, reply) =>
         thing = request.query.thing
-  #    // add user to DB
+        #        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
+
+  #    // add item to DB
         db.items.insert({thing: thing}, (err, doc) ->
           if (err)
             reply({error: err})
@@ -227,6 +218,9 @@ ROUTES =
       handler: (request, reply) =>
         userId = request.params.userId
         itemId = request.params.itemId
+        #        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
+
         db.likes.find({userId: userId, itemId: itemId}, (err, docs) ->
           if (docs.length < 1)
             db.likes.insert({userId: userId, itemId: itemId,}, (err, doc) ->
@@ -235,18 +229,24 @@ ROUTES =
                 return reply({error: err})
 
               console.log("db.likes.insert OK -> ", doc)
-              reco.events([{"namespace": "comentarismo","person": userId,"action": "buy","thing": itemId,"expires_at": "2017-03-30"}])
-              .then( (events) ->
-                  msg = util.format("User %s liked item %s", userId, itemId)
-                  console.log("== LIKE ==")
-                  console.log(events)
-                  console.log("==========")
-                  console.log(msg)
-                  reply({
-                    message: msg
-                  });
+              reco.events([{
+                "namespace": namespace,
+                "person": userId,
+                "action": "buy",
+                "thing": itemId,
+                "expires_at": "2017-03-30"
+              }])
+              .then((events) ->
+                msg = util.format("User %s liked item %s", userId, itemId)
+                console.log("== LIKE ==")
+                console.log(events)
+                console.log("==========")
+                console.log(msg)
+                reply({
+                  message: msg
+                });
               )
-              .catch(RECO.NamespaceDoestNotExist, (err) ->
+              .catch(NamespaceDoestNotExist, (err) ->
                 console.log "POST create event, ",err
                 Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
               )
@@ -270,11 +270,11 @@ ROUTES =
       method: 'GET',
       path: '/users/{userId}/recommend',
       handler: (request, reply) =>
-        #//get userid from session
-        userId = request.params.userId;
-
+        #get userId from request
+        userId = request.params.userId
+        #        TODO: #4 enable namespace filter
+        namespace = Utils.GetNamespace(request)
         person = userId
-        namespace = "comentarismo"
         configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
 
         reco.recommendations_for_person(namespace, person, configuration)
@@ -284,7 +284,7 @@ ROUTES =
               console.log("===============");
               reply({recommendations: []});
             else
-              console.log("== RECOMMEND OK ==")
+              console.log("== RECOMMEND USER OK ==")
               console.log(result)
               console.log("===============")
   #            //resolve items
@@ -303,9 +303,44 @@ ROUTES =
           )
     )
 
+    plugin.route(
+      method: 'GET',
+      path: '/thing/{thingId}/recommend',
+      handler: (request, reply) =>
 
+        #get thingId from request
+        thingId = request.params.thingId
+        namespace = Utils.GetNamespace(request)
+        thing = thingId
+        configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
 
-      ########### NAMESPACE routes ################
+        reco.recommendations_for_thing(namespace, thing, configuration)
+          .then( (result) ->
+            if (!result || result.length == 0)
+              console.log("== RECOMMEND ERROR ==");
+              console.log("== ",thingId,result)
+              console.log("===============");
+              reply({recommendations: []});
+            else
+              console.log("== RECOMMEND THING OK ==",)
+              console.log("== ",thingId,result)
+              console.log("===============")
+              #            //resolve items
+              Utils.resolveItems(result, 0, (err, resolved) ->
+                if (err || !resolved)
+                  console.log("Could not execute resolveItems for thing -> ", err)
+                  reply({recommendations: result.recommendations})
+                else
+                  console.log("INFO: resolveItems for thing  ", resolved)
+                  reply({recommendations: resolved.recommendations})
+              )
+        ).catch((err) ->
+          console.error("Error: ", err); # // Something went wrong
+          reply({error: err})
+        )
+    )
+
+    ########### NAMESPACE routes ################
 
     next()
 

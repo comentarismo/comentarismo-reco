@@ -47,10 +47,15 @@ npm run start
 ### All Together (Client,API,RethinkDB,Memory) Test suite
 `npm run test`
 
-# Test Coverage
+# Run Test Coverage Report
 `npm run coverage`
 
-* Open on browser -> comentarismo-reco/coverage/lcov-report/index.html
+* Open on browser -> http://localhost:3456/coverage/lcov-report/index.html
+
+
+# DOCUMENTATION
+## Comentarismo-reco has automated generator for documentation, in order to generate the updated docs run: `npm run docs`
+* Open on browser -> http://localhost:3456/docs/server.html
 
 
 OTHER STUFF
@@ -84,3 +89,6 @@ https://github.com/arangodb/arangodb/?utm_content=buffer78efd
 
 
 http://stackoverflow.com/questions/34196368/in-arangodb-will-querying-with-filters-from-the-neighbors-be-done-in-on/34203408#34203408
+
+https://www.uport.me/
+https://www.npmjs.com/package/flake

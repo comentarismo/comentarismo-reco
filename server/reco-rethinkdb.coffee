@@ -11,8 +11,6 @@ get_hash = (value) ->
   shasum.update(value.toString())
   shasum.digest("hex")
 
-rethinkdbdash = require 'rethinkdbdash'
-
 class RethinkDBESM
 
   ########################################
@@ -73,6 +71,13 @@ class RethinkDBESM
       ret.map((r) -> r.namespace)
     )
 
+  check_err: (error) ->
+    if error.message.indexOf("already exists on table") != -1
+#      console.log("Index already created, will skip -> ")
+      return true
+    else
+      return false
+
   initialize: (namespace) ->
 #    console.log "R->initialize, ",namespace
     @_r.tableList().run().then( (list) =>
@@ -82,37 +87,41 @@ class RethinkDBESM
       ])
     )
     .spread( (events_created, schema_created) =>
-      promises = []
       if events_created
-        promises = promises.concat([
-          @_r.table("#{namespace}_events").indexCreate("created_at").run(),
-          @_r.table("#{namespace}_events").indexCreate("expires_at",@_r.row("expires_at").default(false)).run(),
+        console.log("table #{namespace}_events created ok")
+      if schema_created
+        console.log("table namespaces created ok")
 
-          @_r.table("#{namespace}_events").indexCreate("person").run(),
-          @_r.table("#{namespace}_events").indexCreate("person_thing",[@_r.row("person"),@_r.row("thing")]).run(),
+      promises = []
+      promises = promises.concat([
+        @_r.table("#{namespace}_events").indexCreate("created_at").run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("expires_at",@_r.row("expires_at").default(false)).run().catch((e) => @check_err(e)),
 
-          @_r.table("#{namespace}_events").indexCreate("person_action",[@_r.row("person"),@_r.row("action")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("person_action_thing",[@_r.row("person"),@_r.row("action"),@_r.row("thing")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("person_action_created_at",[@_r.row("person"),@_r.row("action"),@_r.row("created_at")]).run(),
+        @_r.table("#{namespace}_events").indexCreate("person").run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_thing",[@_r.row("person"),@_r.row("thing")]).run().catch((e) => @check_err(e)),
 
-          @_r.table("#{namespace}_events").indexCreate("person_created_at",[@_r.row("person"),@_r.row("created_at")]).run(),
+        @_r.table("#{namespace}_events").indexCreate("person_action",[@_r.row("person"),@_r.row("action")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_action_thing",[@_r.row("person"),@_r.row("action"),@_r.row("thing")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_action_created_at",[@_r.row("person"),@_r.row("action"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
 
-          @_r.table("#{namespace}_events").indexCreate("person_action_expires_at",[@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false)]).run(),
-          @_r.table("#{namespace}_events").indexCreate("person_thing_created_at",[@_r.row("person"),@_r.row("thing"),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("person_expires_at_created_at",[@_r.row("person"),@_r.row("expires_at").default(false),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("person_action_expires_at_created_at",[@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("created_at_person_action_expires_at",[@_r.row("created_at"),@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false)]).run(),
+        @_r.table("#{namespace}_events").indexCreate("person_created_at",[@_r.row("person"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
 
-          @_r.table("#{namespace}_events").indexCreate("thing_action",[@_r.row("thing"),@_r.row("action")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("thing_action_person_created_at",[@_r.row("thing"),@_r.row("action"),@_r.row("person"),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("thing_action_created_at",[@_r.row("thing"),@_r.row("action"),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("thing_action_created_at_expires_at",[@_r.row("thing"),@_r.row("action"),@_r.row("created_at"),@_r.row("expires_at").default(false)]).run(),
-          @_r.table("#{namespace}_events").indexCreate("thing_created_at",[@_r.row("thing"),@_r.row("created_at")]).run(),
+        @_r.table("#{namespace}_events").indexCreate("person_action_expires_at",[@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false)]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_thing_created_at",[@_r.row("person"),@_r.row("thing"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_expires_at_created_at",[@_r.row("person"),@_r.row("expires_at").default(false),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("person_action_expires_at_created_at",[@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("created_at_person_action_expires_at",[@_r.row("created_at"),@_r.row("person"),@_r.row("action"),@_r.row("expires_at").default(false)]).run().catch((e) => @check_err(e)),
 
-          @_r.table("#{namespace}_events").indexCreate("action_created_at",[@_r.row("action"),@_r.row("created_at")]).run(),
-          @_r.table("#{namespace}_events").indexCreate("action").run()
+        @_r.table("#{namespace}_events").indexCreate("thing_action",[@_r.row("thing"),@_r.row("action")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("thing_action_person_created_at",[@_r.row("thing"),@_r.row("action"),@_r.row("person"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("thing_action_created_at",[@_r.row("thing"),@_r.row("action"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("thing_action_created_at_expires_at",[@_r.row("thing"),@_r.row("action"),@_r.row("created_at"),@_r.row("expires_at").default(false)]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("thing_created_at",[@_r.row("thing"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
 
-        ])
+        @_r.table("#{namespace}_events").indexCreate("action_created_at",[@_r.row("action"),@_r.row("created_at")]).run().catch((e) => @check_err(e)),
+        @_r.table("#{namespace}_events").indexCreate("action").run().catch((e) => @check_err(e)),
+
+      ])
       bb.all(promises).then( => @_r.table("#{namespace}_events").indexWait().run())
     )
     .then( =>
@@ -700,7 +709,4 @@ class RethinkDBESM
   ####     END Compact Function          ####
   ###########################################
 
-module.exports = {
-  esm: RethinkDBESM
-  r: rethinkdbdash
-}
+module.exports = RethinkDBESM

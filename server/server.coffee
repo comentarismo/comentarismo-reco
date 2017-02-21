@@ -7,13 +7,12 @@ bb.Promise.longStackTraces();
 Hapi = require 'hapi'
 
 # RECO
-reco = require './reco'
+RECO = require './reco'
 
-RECO = reco.RECO
+rethinkdbdash = require 'rethinkdbdash'
+r = rethinkdbdash
 
-ret_esm = require './reco-rethinkdb'
-RethinkDBESM = ret_esm.esm
-r = ret_esm.r
+RethinkDBESM = require './reco-rethinkdb'
 
 MemESM = require('./basic_in_memory_esm')
 
@@ -30,6 +29,9 @@ RETHINKDB_DB = process.env.RETHINKDB_DB || 'hapiger_it'
 RETHINKDB_TIMEOUT = process.env.RETHINKDB_TIMEOUT || 120000
 RETHINKDB_BUFFER = process.env.RETHINKDB_BUFFER || 10
 RETHINKDB_MAX = process.env.RETHINKDB_MAX || 50
+
+Errors = require './errors'
+NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
 class ServerRecommendationEngine
   constructor: (options = {}) ->
@@ -53,10 +55,10 @@ class ServerRecommendationEngine
     switch @options.esm
       when 'memory'
         @_esm = new MemESM({})
-        @_ger = new GER(@_esm, @options)
+        @_reco = new RECO(@_esm, @options)
       when 'rethinkdb'
         r = r({ host: RETHINKDB_HOST, port: RETHINKDB_PORT, db: RETHINKDB_DB, timeout: RETHINKDB_TIMEOUT, buffer: RETHINKDB_BUFFER, max: RETHINKDB_MAX})
-        @_esm = new RethinkDBESM({r: r}, RECO.NamespaceDoestNotExist)
+        @_esm = new RethinkDBESM({r: r}, NamespaceDoestNotExist)
         @_reco = new RECO(@_esm, @options)
 
       else
@@ -144,6 +146,24 @@ class ServerRecommendationEngine
           handler: {
             directory: {
               path: 'public'
+            }
+          }
+        });
+        s.route({
+          method: 'GET',
+          path: '/docs/{param*}',
+          handler: {
+            directory: {
+              path: 'docs'
+            }
+          }
+        });
+        s.route({
+          method: 'GET',
+          path: '/coverage/lcov-report/{param*}',
+          handler: {
+            directory: {
+              path: 'coverage/lcov-report'
             }
           }
         });
