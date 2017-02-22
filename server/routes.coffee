@@ -87,7 +87,7 @@ ROUTES =
 
     global.thinky = require('thinky')({r:reco.esm._r})
     global.schema = require('../js/schema')(thinky)
-    
+
     global.User    = schema.User
     global.Items    = schema.Items
     global.Likes    = schema.Likes

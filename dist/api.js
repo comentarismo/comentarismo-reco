@@ -137,7 +137,6 @@
         handler: (function(_this) {
           return function(request, reply) {
             var namespace;
-            console.log("namespaces -> request.payload, ", request.payload);
             namespace = request.payload.namespace;
             return reco.initialize_namespace(namespace).then(function() {
               return reply({

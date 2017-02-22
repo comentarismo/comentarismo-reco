@@ -1,5 +1,5 @@
 (function() {
-  var Datastore, Errors, Items, Likes, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, User, Utils, _, bb, db, hapigerjs, ip, reco, thinky, util;
+  var Datastore, Errors, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, Utils, _, bb, db, hapigerjs, ip, reco, util;
 
   Datastore = require('nedb');
 
@@ -16,14 +16,6 @@
   _ = require("underscore");
 
   reco = require('./reco');
-
-  User = require('../js/schema').User;
-
-  Items = require('../js/schema').Items;
-
-  Likes = require('../js/schema').Likes;
-
-  thinky = require('thinky')();
 
   Errors = require('./errors');
 
@@ -58,19 +50,21 @@
         if (!t) {
           return cb(null, result);
         } else {
-          return db.items.findOne({
-            _id: t.thing
-          }, function(err, doc) {
-            if (err || !doc) {
-              console.log("Error: db.items.findOne, ", err);
-              return cb(null, result);
-            } else {
-              t.thing = doc.thing;
-              t._id = doc._id;
-              console.log("Transformed thing -> ", t);
-              count = count + 1;
-              return Utils.resolveItems(result, count, cb);
-            }
+          console.log('t.thing ', t.thing);
+          return bb.all([Items.get(t.thing).run()]).spread(function(doc) {
+            console.log('itemId LIKE d', doc);
+            t.thing = doc.thing;
+            t.id = doc.id;
+            console.log("Transformed thing -> ", t);
+            count = count + 1;
+            return Utils.resolveItems(result, count, cb);
+          })["catch"](thinky.Errors.ValidationError, function(err) {
+            console.log("Validation Error: ", err.message);
+            return Utils.resolveItems(result, count, cb);
+          })["catch"](function(error) {
+            console.log("Error: ", err.message);
+            count = count + 1;
+            return Utils.resolveItems(result, count, cb);
           });
         }
       }
@@ -93,6 +87,13 @@
     register: function(plugin, options, next) {
       var default_configuration;
       reco = options.reco;
+      global.thinky = require('thinky')({
+        r: reco.esm._r
+      });
+      global.schema = require('../js/schema')(thinky);
+      global.User = schema.User;
+      global.Items = schema.Items;
+      global.Likes = schema.Likes;
       default_configuration = options.default_configuration || {};
       require('dns').lookup(require('os').hostname(), function(err, add, fam) {
         console.log('addr: ' + add);
@@ -299,7 +300,7 @@
                     return reply({
                       message: msg
                     });
-                  })["catch"](Utils.NamespaceDoestNotExist, function(err) {
+                  })["catch"](NamespaceDoestNotExist, function(err) {
                     console.log("ERROR: POST create event, ", err);
                     return Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply);
                   })["catch"](function(err) {

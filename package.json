@@ -1,8 +1,12 @@
 {
   "name": "Comentarismo-Reco",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Comentarismo Recomendation Engine API",
   "main": "comentarismoger.js",
+  "engines": {
+    "node": ">= 7.6.0",
+    "npm": "4.1.2"
+  },
   "scripts": {
     "docs": "node_modules/.bin/docco server/*.coffee test/**/*.coffee public/js/main.js",
     "build": "node_modules/.bin/coffee --no-header --map --output dist -c server/*.coffee",
@@ -16,7 +20,7 @@
     "coverage:rm": "rm -rf coverage",
     "coverage:report": "node_modules/.bin/istanbul report",
     "coverage:check": "node_modules/.bin/istanbul check-coverage ./coverage/coverage.json",
-    "coverage:esms":"node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test/esms/ -R spec"
+    "coverage:esms": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test/esms/ -R spec"
   },
   "dependencies": {
     "basic-auth-connect": "1.0.0",

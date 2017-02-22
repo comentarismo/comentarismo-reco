@@ -130,12 +130,6 @@
       })(this)).spread((function(_this) {
         return function(events_created, schema_created) {
           var promises;
-          if (events_created) {
-            console.log("table " + namespace + "_events created ok");
-          }
-          if (schema_created) {
-            console.log("table namespaces created ok");
-          }
           promises = [];
           promises = promises.concat([
             _this._r.table(namespace + "_events").indexCreate("created_at").run()["catch"](function(e) {
