@@ -126,7 +126,7 @@ html
 
               ul.userList
                 - each u in users
-                  li.user(id="u#{u.id}")
+                  li.user(id="u_#{u.id}")
                     a.btn(onclick="selectUser('#{u.id}');") #{u.name}
 
 
