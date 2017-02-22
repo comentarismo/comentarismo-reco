@@ -87,10 +87,10 @@ class RethinkDBESM
       ])
     )
     .spread( (events_created, schema_created) =>
-      if events_created
-        console.log("table #{namespace}_events created ok")
-      if schema_created
-        console.log("table namespaces created ok")
+#      if events_created
+#        console.log("table #{namespace}_events created ok")
+#      if schema_created
+#        console.log("table namespaces created ok")
 
       promises = []
       promises = promises.concat([

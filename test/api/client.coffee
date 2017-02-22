@@ -144,6 +144,23 @@ class GERClient
     request(req)
       .then(process_response)
 
+  user_likes: (namespace, user) ->
+    req = {
+      method: "GET",
+      uri: "#{@server_uri}/users/#{user}/likes"
+    }
+    request(req)
+    .then(process_response)
+
+  clear:() ->
+    req = {
+      method: "GET",
+      uri: "#{@server_uri}/clear"
+    }
+    request(req)
+    .then(process_response)
+    
+
 GERClient.Not200Error = Not200Error
 
 module.exports = GERClient;

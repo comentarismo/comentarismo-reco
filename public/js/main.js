@@ -67,14 +67,14 @@ function loadRecs(userId){
                         var t = recs[i];
                         console.log(t);
                         if (t)
-                            list = list + "<li id='r_"+ t._id +"' class='item'>" + t.thing + "<a href='#' class='btn' onclick=likeItem('" + t._id + "')> like</a></li>"
+                            list = list + "<li id='r_"+ t.id +"' class='item'>" + t.thing + "<a href='#' class='btn' onclick=likeItem('" + t.id + "')> like</a></li>"
                     }
                     html = html + list + "</ul>";
 
                     $("#recList").html(html);
 
-                    for (i in data) {
-                        $(".item#r_" + data[i].itemId).addClass("hidden");
+                    for (i in data.likes) {
+                        $(".item#r_" + data.likes[i].itemId).addClass("hidden");
                     }
 
 
@@ -154,8 +154,8 @@ function getLikes(){
             $('.success').html("OK: getLikes "+ curr_userId);
             $('.success').show();
 
-            for(i in data){
-                $(".item#i_"+data[i].itemId).addClass("selected");
+            for(i in data.likes){
+                $(".item#i_"+data.likes[i].itemId).addClass("selected");
             }
         }, error: function (error) {
             console.log("Error:, getLikes, ", error);

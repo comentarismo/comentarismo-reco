@@ -1,5 +1,5 @@
 (function() {
-  var API, Boom, Joi, Utils, _, bb, configuration_schema, event_schema, events_request_schema, get_events_request_schema, namespace_request_schema, namespace_schema, reco, recommendation_request_schema;
+  var API, Boom, Errors, Joi, NamespaceDoestNotExist, Utils, _, bb, configuration_schema, event_schema, events_request_schema, get_events_request_schema, namespace_request_schema, namespace_schema, reco, recommendation_request_schema;
 
   bb = require('bluebird');
 
@@ -10,6 +10,10 @@
   Boom = require('boom');
 
   reco = require('./reco');
+
+  Errors = require('./errors');
+
+  NamespaceDoestNotExist = Errors.NamespaceDoestNotExist;
 
   namespace_schema = Joi.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/);
 

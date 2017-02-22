@@ -41,6 +41,7 @@
     "nedb": "^1.8.0",
     "nstore": "~0.5.2",
     "rethinkdbdash": "2.3.27",
+    "thinky": "^2.3.8",
     "vision": "4.1.1"
   },
   "devDependencies": {

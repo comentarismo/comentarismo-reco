@@ -148,7 +148,7 @@ class ServerRecommendationEngine
               path: 'public'
             }
           }
-        });
+        })
         s.route({
           method: 'GET',
           path: '/docs/{param*}',
@@ -166,7 +166,7 @@ class ServerRecommendationEngine
               path: 'coverage/lcov-report'
             }
           }
-        });
+        })
         d.resolve()
     )
     d.promise

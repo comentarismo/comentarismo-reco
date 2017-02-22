@@ -7,6 +7,9 @@ Boom = require 'boom'
 # RECO
 reco = require './reco'
 
+Errors = require './errors'
+NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
+
 namespace_schema = Joi.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/)
 
 namespace_request_schema = Joi.object().keys({
@@ -113,7 +116,7 @@ API =
           payload: namespace_request_schema
 
       handler: (request, reply) =>
-        console.log "namespaces -> request.payload, ",request.payload
+#        console.log "namespaces -> request.payload, ",request.payload
         namespace = request.payload.namespace
         reco.initialize_namespace(namespace)
         .then( ->
