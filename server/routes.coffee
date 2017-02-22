@@ -12,11 +12,6 @@ _ = require "underscore"
 # RECO
 reco = require './reco'
 
-User    = require('../js/schema').User
-Items    = require('../js/schema').Items
-Likes    = require('../js/schema').Likes
-
-thinky = require('thinky')()
 Errors = require './errors'
 NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
@@ -43,8 +38,8 @@ Utils.resolveItems = (result, count, cb) =>
       cb(null, result)
     else
       console.log('t.thing ', t.thing)
-#       
-      bb.all([                                   
+#
+      bb.all([
         Items.get(t.thing).run()
       ]).spread(( doc) ->
         console.log('itemId LIKE d'   , doc)
@@ -89,6 +84,15 @@ ip = null
 ROUTES =
   register: (plugin, options, next) ->
     reco = options.reco
+
+    global.thinky = require('thinky')({r:reco.esm._r})
+    global.schema = require('../js/schema')(thinky)
+    
+    global.User    = schema.User
+    global.Items    = schema.Items
+    global.Likes    = schema.Likes
+
+
     default_configuration = options.default_configuration || {}
 
     require('dns').lookup(require('os').hostname(), (err, add, fam) ->

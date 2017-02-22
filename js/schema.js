@@ -1,40 +1,46 @@
-const thinky  = require('../js/thinky');
+// const thinky = require('../js/thinky');
 
-const r       = thinky.r;
-const type    = thinky.type;
+// const r = thinky.r;
+// const type = thinky.type;
 
-const Items = thinky.createModel('items', {
-  id  : type.string(),
-  thing : type.string()
-})
+var Schema = function(thinky){
+    const Items = thinky.createModel('items', {
+        id: thinky.type.string(),
+        thing: thinky.type.string()
+    });
 
-const Likes = thinky.createModel('likes', {
-  id : type.string().uuid(5),
-  itemId : type.string(),
-  userId : type.string()
-})
+    const User = thinky.createModel('user', {
+        id: thinky.type.string(),
+        name: thinky.type.string()
+    });
 
-const User = thinky.createModel('user', {
-  id : type.string(),
-  name : type.string()
-})
+    const Likes = thinky.createModel('likes', {
+        id: thinky.type.string().uuid(5),
+        itemId: thinky.type.string(),
+        userId: thinky.type.string()
+    });
+
+    Likes.belongsTo(User, 'user', 'userId', 'id');
+    Likes.belongsTo(Items, 'items', 'itemId', 'id');
+    User.hasMany(Likes, 'likes', 'id', 'userId');
+    Items.hasMany(Likes, 'likes', 'id', 'itemId');
+
+    var schema = {
+        Items: Items,
+        Likes: Likes,
+        User: User
+    };
+    return schema;
+}
+
 
 // Relations
 
 // Items.belongsTo(User, 'user', 'userId', 'id');
-
-Likes.belongsTo(User, 'user', 'userId', 'id');
-Likes.belongsTo(Items, 'items', 'itemId', 'id');
-
-
 //User.hasMany(Items, 'items', 'id', 'userId');
-User.hasMany(Likes, 'likes', 'id', 'userId');
-Items.hasMany(Likes, 'likes', 'id', 'itemId')
 
-module.exports = {
-  Items:Items,
-  Likes:Likes,
-  User:User,
+module.exports = function(thinky){
+    return new Schema(thinky)
 };
 
 // const Post = thinky.createModel('posts', {
