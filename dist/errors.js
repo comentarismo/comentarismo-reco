@@ -20,6 +20,21 @@
 
   Errors.NamespaceDoestNotExist = NamespaceDoestNotExist;
 
+  Errors.handle_error = function(logger, err, reply) {
+    if (err.isBoom) {
+      logger.log(['error'], err);
+      return reply(err);
+    } else {
+      logger.log(['error'], {
+        error: "" + err,
+        stack: err.stack
+      });
+      return reply({
+        error: "An unexpected error occurred"
+      }).code(500);
+    }
+  };
+
   module.exports = Errors;
 
 }).call(this);

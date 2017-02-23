@@ -8,7 +8,6 @@ class Not200Error extends Error
 
 process_response = (response) ->
   body = response.body
-  console.log("process_response, ",response.statusCode)
 
   json = JSON.parse(body)
   status = response.statusCode
@@ -19,9 +18,11 @@ process_response = (response) ->
     e.body = json
     throw e
 
+#  console.log("process_response, ",json)
+
   [json, status]
 
-class GERClient
+class RECOClient
   constructor : (@server_uri) ->
 
 ########### NAMESPACE routes ################
@@ -150,7 +151,7 @@ class GERClient
       uri: "#{@server_uri}/users/#{user}/likes"
     }
     request(req)
-    .then(process_response)
+      .then(process_response)
 
   clear:() ->
     req = {
@@ -159,8 +160,23 @@ class GERClient
     }
     request(req)
     .then(process_response)
-    
 
-GERClient.Not200Error = Not200Error
+  health:() ->
+    req = {
+      method: "GET",
+      uri: "#{@server_uri}/health"
+    }
+    request(req)
+      .then(process_response)
 
-module.exports = GERClient;
+  index:() ->
+    req = {
+      method: "GET",
+      uri: "#{@server_uri}/"
+    }
+    request(req)
+
+
+RECOClient.Not200Error = Not200Error
+
+module.exports = RECOClient;

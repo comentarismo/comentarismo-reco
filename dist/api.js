@@ -65,21 +65,6 @@
 
   Utils = {};
 
-  Utils.handle_error = function(logger, err, reply) {
-    if (err.isBoom) {
-      logger.log(['error'], err);
-      return reply(err);
-    } else {
-      logger.log(['error'], {
-        error: "" + err,
-        stack: err.stack
-      });
-      return reply({
-        error: "An unexpected error occurred"
-      }).code(500);
-    }
-  };
-
   API = {
     register: function(plugin, options, next) {
       var default_configuration;
@@ -95,7 +80,7 @@
                 namespaces: namespaces
               });
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -117,7 +102,7 @@
                 namespace: namespace
               });
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -143,7 +128,7 @@
                 namespace: namespace
               });
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -166,9 +151,9 @@
               return reply(request.payload);
             })["catch"](NamespaceDoestNotExist, function(err) {
               console.log("Error: POST create event, ", err);
-              return Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply);
+              return Errors.handle_error(request, Boom.notFound("Namespace Not Found"), reply);
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -194,7 +179,7 @@
                 "events": events
               });
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -232,7 +217,7 @@
             }).then(function(recommendations) {
               return reply(recommendations);
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)
@@ -269,7 +254,7 @@
                 compression: ((1 - (end_count / init_count)) * 100) + "%"
               });
             })["catch"](function(err) {
-              return Utils.handle_error(request, err, reply);
+              return Errors.handle_error(request, err, reply);
             });
           };
         })(this)

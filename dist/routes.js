@@ -23,25 +23,9 @@
 
   Utils = {};
 
-  Utils.handle_error = function(logger, err, reply) {
-    console.log("handle_error -> ", err.stack);
-    if (err.isBoom) {
-      console.log('error', err);
-      return reply(err);
-    } else {
-      console.log('error', {
-        error: "" + err,
-        stack: err.stack
-      });
-      return reply({
-        error: "An unexpected error occurred"
-      }).code(500);
-    }
-  };
-
   Utils.resolveItems = (function(_this) {
-    return function(result, count, cb) {
-      var t;
+    return function(namespace, result, count, cb) {
+      var ns_thing, t;
       if (!result || !result.recommendations) {
         console.log("Error: resolveItems called with invalid input -> !result || !result.recommendations -> ", result);
         return cb(result);
@@ -50,21 +34,19 @@
         if (!t) {
           return cb(null, result);
         } else {
-          console.log('t.thing ', t.thing);
-          return bb.all([Items.get(t.thing).run()]).spread(function(doc) {
-            console.log('itemId LIKE d', doc);
+          ns_thing = t.thing;
+          return bb.all([Items.get(ns_thing).run()]).spread(function(doc) {
             t.thing = doc.thing;
             t.id = doc.id;
-            console.log("Transformed thing -> ", t);
             count = count + 1;
-            return Utils.resolveItems(result, count, cb);
+            return Utils.resolveItems(namespace, result, count, cb);
           })["catch"](thinky.Errors.ValidationError, function(err) {
             console.log("Validation Error: ", err.message);
-            return Utils.resolveItems(result, count, cb);
+            return Utils.resolveItems(namespace, result, count, cb);
           })["catch"](function(error) {
-            console.log("Error: ", err.message);
+            console.log("Error: ", error.message);
             count = count + 1;
-            return Utils.resolveItems(result, count, cb);
+            return Utils.resolveItems(namespace, result, count, cb);
           });
         }
       }
@@ -114,21 +96,16 @@
           return function(request, reply) {
             var namespace;
             namespace = Utils.GetNamespace(request);
-            return bb.all([User.run(), Items.run()]).spread(function(users, items) {
+            return bb.all([User.limit(50).run(), Items.limit(50).run()]).spread(function(users, items) {
               return reply.view("index", {
                 users: users,
                 items: items,
                 recommendations: []
               });
-            })["catch"](thinky.Errors.ValidationError, function(err) {
-              console.log("Validation Error: " + err.message);
-              return reply({
-                error: err
-              });
             })["catch"](function(error) {
               return reply({
                 error: error
-              });
+              }).code(500);
             });
           };
         })(this)
@@ -138,12 +115,16 @@
         path: '/health',
         handler: (function(_this) {
           return function(request, reply) {
-            var namespace;
-            namespace = Utils.GetNamespace(request);
-            return reply({
-              status: "ok",
-              ip: ip
-            }).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            return reco.esm._r.db('rethinkdb').table('server_status').run().then(function(status) {
+              return reply({
+                status: status,
+                ip: ip
+              }).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            })["catch"](function(err) {
+              return console.log("Error: ", err)(reply({
+                error: err
+              }).code(500));
+            });
           };
         })(this)
       });
@@ -152,20 +133,16 @@
         path: '/clear',
         handler: (function(_this) {
           return function(request, reply) {
-            return bb.all([User["delete"]().run(), Items["delete"]().run(), Likes["delete"]().run()]).spread(function(user, item, like) {
-              console.log("Removed  likes");
+            return bb.all([User["delete"]().run(), Items["delete"]().run(), Likes["delete"]().run()]).spread(function(user, items, likes) {
+              console.log("Removed  User, Items, Likes ", user, items, likes);
               return reply({
                 status: "ok",
                 ip: ip
               }).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            })["catch"](thinky.Errors.ValidationError, function(err) {
-              return console.log("Validation Error: " + err.message)(reply({
-                error: err
-              }));
             })["catch"](function(error) {
-              return reply({
+              return console.log("Error: ", err)(reply({
                 error: error
-              });
+              }).code(500));
             });
           };
         })(this)
@@ -175,20 +152,24 @@
         path: '/users/{userId}/likes',
         handler: (function(_this) {
           return function(request, reply) {
-            var namespace, userId;
+            var userId;
             userId = request.params.userId;
-            namespace = Utils.GetNamespace(request);
-            return bb.all([User.get(userId).getJoin().run()]).spread(function(user) {
+            return bb.all([
+              User.get(userId).getJoin({
+                likes: true
+              }).run()
+            ]).spread(function(user) {
               return reply(user);
             })["catch"](thinky.Errors.ValidationError, function(err) {
               console.log("Validation Error: " + err.message);
               return reply({
                 error: err
-              });
+              }).code(500);
             })["catch"](function(error) {
+              console.log("Error: ", err);
               return reply({
                 error: error
-              });
+              }).code(500);
             });
           };
         })(this)
@@ -198,29 +179,36 @@
         path: '/users/add',
         handler: (function(_this) {
           return function(request, reply) {
-            var name, namespace, user;
+            var name, namespace, ns_user, user;
             name = request.query.name;
             namespace = Utils.GetNamespace(request);
-            console.log("Will save user -> ", name);
+            ns_user = name;
+            if (name.indexOf(namespace) === -1) {
+              ns_user = namespace + "_" + name;
+            }
             user = new User({
-              id: name,
-              name: name
+              id: thinky.r.uuid(ns_user),
+              name: name,
+              namespace: namespace
             });
             return User.save(user, {
               conflict: 'update'
             }).then(function(result) {
+              console.log("/users/add saved -> ", namespace, ns_user, result.id);
               return reply({
-                message: "ok"
+                message: "ok",
+                "id": result.id
               });
             })["catch"](thinky.Errors.ValidationError, function(err) {
-              console.log("Validation Error: " + err.message);
+              console.log("Error: Validation -> ", namespace, ns_user, result.id, err.message);
               return reply({
                 error: err
-              });
-            })["catch"](function(error) {
+              }).code(500);
+            })["catch"](function(err) {
+              console.log("Error: ", err);
               return reply({
-                error: error
-              });
+                error: err
+              }).code(500);
             });
           };
         })(this)
@@ -228,35 +216,40 @@
       plugin.route({
         method: 'GET',
         path: '/items/add',
-        handler: (function(_this) {
-          return function(request, reply) {
-            var items, namespace, thing;
-            thing = request.query.thing;
-            namespace = Utils.GetNamespace(request);
-            items = new Items({
-              id: thing,
-              thing: thing
+        handler: function(request, reply) {
+          var items, namespace, ns_thing, thing;
+          thing = request.query.thing;
+          namespace = Utils.GetNamespace(request);
+          ns_thing = thing;
+          if (thing.indexOf(namespace) === -1) {
+            ns_thing = namespace + "_" + thing;
+          }
+          items = new Items({
+            id: thinky.r.uuid(ns_thing),
+            thing: thing,
+            namespace: namespace
+          });
+          return Items.save(items, {
+            conflict: 'update'
+          }).then(function(result) {
+            console.log("/items/add saved -> ", namespace, thing, result.id);
+            return reply({
+              message: "ok",
+              "id": result.id
             });
-            console.log("Will save thing -> ", thing);
-            return Items.save(items, {
-              conflict: 'update'
-            }).then(function(result) {
-              return reply({
-                message: "ok"
-              });
-            })["catch"](thinky.Errors.ValidationError, function(err) {
-              console.log("Validation Error: " + err.message);
-              return reply({
-                error: err
-              });
-            })["catch"](function(err) {
-              console.log("Unexpected Error: " + err.message);
-              return reply({
-                error: err
-              });
-            });
-          };
-        })(this)
+          })["catch"](thinky.Errors.ValidationError, function(err) {
+            console.log("Validation Error: " + err.message);
+            return reply({
+              error: err
+            }).code(500);
+          })["catch"](function(err) {
+            console.log("Unexpected Error: " + err.message);
+            console.log("Error: ", err);
+            return reply({
+              error: err
+            }).code(500);
+          });
+        }
       });
       plugin.route({
         method: 'GET',
@@ -272,53 +265,55 @@
               var likes, msg;
               if (user && item) {
                 likes = new Likes({
-                  id: thinky.r.uuid(user.id + item.id)
+                  id: thinky.r.uuid(user.id + "_" + item.id),
+                  namespace: namespace,
+                  user: user,
+                  items: item
                 });
-                likes.user = user;
-                likes.items = item;
                 return likes.saveAll({
                   user: true,
                   items: true
                 }, {
                   conflict: 'update'
                 }).then(function(result) {
-                  console.log("db.likes.insert OK -> ", result);
+                  console.log("==== likes.saveAll -> ", result.id);
                   return reco.events([
                     {
                       "namespace": namespace,
-                      "person": userId,
+                      "person": user.id,
                       "action": "buy",
-                      "thing": itemId,
+                      "thing": item.id,
                       "expires_at": "2017-03-30"
                     }
                   ]).then(function(events) {
                     var msg;
-                    msg = util.format("User %s liked item %s", userId, itemId);
+                    msg = util.format("User %s %s liked item %s %s", user.id, user.name, item.thing, item.id);
                     console.log("== LIKE ==");
-                    console.log(events, msg);
+                    console.log(msg);
                     console.log("==========");
                     return reply({
+                      id: result.id,
                       message: msg
                     });
                   })["catch"](NamespaceDoestNotExist, function(err) {
-                    console.log("ERROR: POST create event, ", err);
-                    return Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply);
+                    console.log("ERROR: NamespaceDoestNotExist reco.events, ", err);
+                    return Errors.handle_error(request, Boom.notFound("Namespace Not Found"), reply).code(500);
                   })["catch"](function(err) {
-                    console.log("Error: ", err);
+                    console.log("Error: reco.events, ", err);
                     return reply({
                       message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)
-                    });
+                    }).code(500);
                   });
                 })["catch"](thinky.Errors.ValidationError, function(err) {
-                  console.log("Error:  db.likes.insert ", userId, itemId);
+                  console.log("Error: ValidationError db.likes.insert ", userId, itemId, err);
                   return reply({
                     error: err
-                  });
+                  }).code(500);
                 })["catch"](function(error) {
-                  console.log("Error:  db.likes.insert ", userId, itemId);
+                  console.log("Error: db.likes.insert ", userId, itemId, error);
                   return reply({
                     error: error
-                  });
+                  }).code(500);
                 });
               } else {
                 msg = util.format("Error: User %s already liked item %s", userId, itemId);
@@ -330,10 +325,10 @@
                 });
               }
             })["catch"](function(error) {
-              console.log("Error:  db.likes.insert ", userId, itemId);
+              console.log("Error:  db.likes.insert ", userId, itemId, error);
               return reply({
                 error: error
-              });
+              }).code(500);
             });
           };
         })(this)
@@ -343,35 +338,34 @@
         path: '/users/{userId}/recommend',
         handler: (function(_this) {
           return function(request, reply) {
-            var configuration, namespace, person, userId;
+            var configuration, namespace, userId;
             userId = request.params.userId;
             namespace = Utils.GetNamespace(request);
-            person = userId;
             configuration = _.defaults({
               "actions": {
                 "view": 5,
                 "buy": 10
               }
             }, default_configuration);
-            return reco.recommendations_for_person(namespace, person, configuration).then(function(result) {
+            return reco.recommendations_for_person(namespace, userId, configuration).then(function(result) {
               if (!result || result.length === 0) {
                 console.log("== RECOMMEND ERROR ==");
                 console.log("===============");
                 return reply({
                   recommendations: []
-                });
+                }).code(500);
               } else {
                 console.log("== RECOMMEND USER OK ==");
-                console.log(result);
+                console.log("== length, ", result.recommendations.length);
                 console.log("===============");
-                return Utils.resolveItems(result, 0, function(err, resolved) {
+                return Utils.resolveItems(namespace, result, 0, function(err, resolved) {
                   if (err || !resolved) {
                     console.log("Could not execute resolveItems -> ", err);
                     return reply({
                       recommendations: result.recommendations
                     });
                   } else {
-                    console.log("INFO: resolveItems, ", resolved);
+                    console.log("INFO: resolveItems for user length -> ", resolved.recommendations.length);
                     return reply({
                       recommendations: resolved.recommendations
                     });
@@ -382,7 +376,7 @@
               console.error("Error: ", err);
               return reply({
                 error: err
-              });
+              }).code(500);
             });
           };
         })(this)
@@ -392,17 +386,16 @@
         path: '/thing/{thingId}/recommend',
         handler: (function(_this) {
           return function(request, reply) {
-            var configuration, namespace, thing, thingId;
+            var configuration, namespace, thingId;
             thingId = request.params.thingId;
             namespace = Utils.GetNamespace(request);
-            thing = thingId;
             configuration = _.defaults({
               "actions": {
                 "view": 5,
                 "buy": 10
               }
             }, default_configuration);
-            return reco.recommendations_for_thing(namespace, thing, configuration).then(function(result) {
+            return reco.recommendations_for_thing(namespace, thingId, configuration).then(function(result) {
               if (!result || result.length === 0) {
                 console.log("== RECOMMEND ERROR ==");
                 console.log("== ", thingId, result);
@@ -412,16 +405,16 @@
                 });
               } else {
                 console.log("== RECOMMEND THING OK ==");
-                console.log("== ", thingId, result);
+                console.log("== length ", thingId, result.recommendations.length);
                 console.log("===============");
-                return Utils.resolveItems(result, 0, function(err, resolved) {
+                return Utils.resolveItems(namespace, result, 0, function(err, resolved) {
                   if (err || !resolved) {
-                    console.log("Could not execute resolveItems for thing -> ", err);
+                    console.log("Error: Could not execute resolveItems for thing -> ", err);
                     return reply({
                       recommendations: result.recommendations
                     });
                   } else {
-                    console.log("INFO: resolveItems for thing  ", resolved);
+                    console.log("INFO: resolveItems for thing length -> ", resolved.recommendations.length);
                     return reply({
                       recommendations: resolved.recommendations
                     });
@@ -432,7 +425,7 @@
               console.error("Error: ", err);
               return reply({
                 error: err
-              });
+              }).code(500);
             });
           };
         })(this)

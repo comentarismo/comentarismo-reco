@@ -17,18 +17,9 @@ NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
 Utils = {}
 
-Utils.handle_error = (logger, err, reply) ->
-  console.log "handle_error -> ", err.stack
-  if err.isBoom
-    console.log('error', err)
-    reply(err)
-  else
-    console.log('error', {error: "#{err}", stack: err.stack})
-    reply({error: "An unexpected error occurred"}).code(500)
-
 ########### NAMESPACE funcs ################
 #        TODO: #4 enable namespace filter
-Utils.resolveItems = (result, count, cb) =>
+Utils.resolveItems = (namespace,result, count, cb) =>
   if (!result || !result.recommendations)
     console.log("Error: resolveItems called with invalid input -> !result || !result.recommendations -> ", result)
     return cb(result)
@@ -37,26 +28,23 @@ Utils.resolveItems = (result, count, cb) =>
     if (!t)
       cb(null, result)
     else
-      console.log('t.thing ', t.thing)
+
+      ns_thing = t.thing
 #
       bb.all([
-        Items.get(t.thing).run()
+        Items.get(ns_thing).run()
       ]).spread(( doc) ->
-        console.log('itemId LIKE d'   , doc)
         t.thing = doc.thing
         t.id = doc.id
-        console.log("Transformed thing -> ", t)
         count = count + 1
-        Utils.resolveItems(result, count, cb)
+        Utils.resolveItems(namespace,result, count, cb)
       ).catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " , err.message)
-          Utils.resolveItems(result, count, cb)
-#          reply({error: err})
+          Utils.resolveItems(namespace,result, count, cb)
       ).catch((error) ->
-        console.log("Error: " , err.message)
+        console.log("Error: " , error.message)
         count = count + 1
-        Utils.resolveItems(result, count, cb)
-#          reply({error: error})
+        Utils.resolveItems(namespace,result, count, cb)
       )
 
 #      db.items.findOne({_id: t.thing}, (err, doc) ->
@@ -117,15 +105,12 @@ ROUTES =
 #        TODO: #4 enable namespace filter
         namespace = Utils.GetNamespace(request)
         bb.all([
-          User.run()
-          Items.run()
+          User.limit(50).run()
+          Items.limit(50).run()
         ]).spread((users , items) ->
           reply.view("index", {users:users, items:items, recommendations:[]})
-        ).catch(thinky.Errors.ValidationError, (err) =>
-          console.log("Validation Error: " + err.message)
-          reply({error: err})
         ).catch((error) =>
-          reply({error: error})
+          reply({error: error}).code(500)
         )
     )
 
@@ -134,12 +119,14 @@ ROUTES =
       method: 'GET',
       path: '/health',
       handler: (request, reply) =>
-#        TODO: #4 enable namespace filter
-        namespace = Utils.GetNamespace(request)
+#        TODO: #4 enable namespace filter ?
+#        namespace = Utils.GetNamespace(request)
 
-        reply({status: "ok", ip: ip})
+        reco.esm._r.db('rethinkdb').table('server_status').run().then((status) ->
+          reply({status: status, ip: ip})
           .header("Access-Control-Allow-Origin", "*")
           .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+        ).catch((err) -> console.log("Error: ",err) reply({error: err}).code(500) )
     )
 
     ########### NAMESPACE routes clear ################
@@ -152,11 +139,10 @@ ROUTES =
             User.delete().run()
             Items.delete().run()
             Likes.delete().run()
-        ]).spread((user , item , like) ->
-            console.log("Removed  likes")
+        ]).spread((user , items , likes) ->
+            console.log("Removed  User, Items, Likes ", user, items, likes)
             reply({status: "ok", ip: ip}).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-        ).catch(thinky.Errors.ValidationError, (err) -> console.log("Validation Error: " + err.message) reply({error: err})
-        ).catch((error) -> reply({error: error}))
+        ).catch((error) -> console.log("Error: ",err) reply({error: error}).code(500))
     )
 
     ########### NAMESPACE routes Get user likes (current) ################
@@ -166,19 +152,19 @@ ROUTES =
       path: '/users/{userId}/likes',
       handler: (request, reply) =>
 
-#    // Get user likes (current)
+        # Get user likes (current)
         userId = request.params.userId
-        #        TODO: #4 enable namespace filter
-        namespace = Utils.GetNamespace(request)
+
         bb.all([
-          User.get(userId).getJoin().run()
-        ]).spread((user ) ->
+          User.get(userId).getJoin({likes:true}).run()
+        ]).spread((user) ->
           reply(user)
         ).catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " + err.message)
-          reply({error: err})
+          reply({error: err}).code(500)
         ).catch((error) ->
-          reply({error: error})
+          console.log("Error: ",err)
+          reply({error: error}).code(500)
         )
     )
 
@@ -189,23 +175,29 @@ ROUTES =
       path: '/users/add',
       handler: (request, reply) =>
         name = request.query.name
-        #        TODO: #4 enable namespace filter
         namespace = Utils.GetNamespace(request)
 
-        console.log("Will save user -> ", name)
+        ns_user = name
+        if name.indexOf(namespace) == -1
+          ns_user = namespace + "_"+ name
+
+#        console.log("Will save user -> ", ns_user)
 
         user   = new User({
-          id      : name
-          name    : name
+          id        : thinky.r.uuid(ns_user)
+          name      : name
+          namespace : namespace
         })
         User.save(user , {conflict:'update'}).then((result) ->
-           reply({message: "ok"})
+          console.log("/users/add saved -> ",namespace, ns_user, result.id)
+          reply({message: "ok", "id":result.id})
         ).catch(thinky.Errors.ValidationError, (err) ->
-          console.log("Validation Error: " + err.message)
-          reply({error: err})
-        ).catch((error) ->
+          console.log("Error: Validation -> ",namespace, ns_user, result.id, err.message)
+          reply({error: err}).code(500)
+        ).catch((err) ->
           #Unexpected error
-          reply({error: error})
+          console.log("Error: ",err)
+          reply({error: err}).code(500)
         )
     )
 
@@ -214,28 +206,35 @@ ROUTES =
     plugin.route(
       method: 'GET',
       path: '/items/add',
-      handler: (request, reply) =>
+      handler: (request, reply) ->
         thing = request.query.thing
-        #        TODO: #4 enable namespace filter
         namespace = Utils.GetNamespace(request)
 
+        ns_thing = thing
+
+        if thing.indexOf(namespace) == -1
+          ns_thing = namespace + "_"+ thing
+
+#        console.log("Will save thing :O -> ", ns_thing)
+
         items   = new Items({
-          id    : thing
-          thing  : thing
+          id        : thinky.r.uuid(ns_thing)
+          thing     : thing
+          namespace : namespace
         })
 
-        console.log("Will save thing -> ",thing)
-
         Items.save(items , {conflict:'update'}).then((result) ->
-          reply({message: "ok"})
+          console.log("/items/add saved -> ",namespace, thing, result.id)
+          reply({message: "ok", "id":result.id})
         )
         .catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " + err.message)
-          reply({error: err})
+          reply({error: err}).code(500)
         )
         .catch((err) ->
           console.log("Unexpected Error: " + err.message)
-          reply({error: err})
+          console.log("Error: ",err)
+          reply({error: err}).code(500)
         )
     )
 
@@ -258,40 +257,42 @@ ROUTES =
         .spread((user , item) ->
           if (user and item)
             likes   = new Likes({
-              id :   thinky.r.uuid(user.id+item.id)
+              id        : thinky.r.uuid(user.id+"_"+item.id)
+              namespace : namespace
+              user      : user
+              items     : item
             })
-            likes.user = user
-            likes.items = item
             likes.saveAll({user : true, items: true},{ conflict:'update'})
               .then((result) ->
-                console.log("db.likes.insert OK -> ", result)
+                console.log("==== likes.saveAll -> ", result.id)
                 #TODO config date
-                reco.events([{"namespace":namespace,"person": userId,"action": "buy","thing": itemId,"expires_at": "2017-03-30"}])
+                reco.events([{"namespace":namespace,"person": user.id,"action": "buy","thing": item.id,"expires_at": "2017-03-30"}])
                 .then((events) ->
-                  msg = util.format("User %s liked item %s", userId, itemId)
+                  msg = util.format("User %s %s liked item %s %s", user.id, user.name, item.thing, item.id)
                   console.log("== LIKE ==")
-                  console.log(events,msg)
+                  console.log(msg)
                   console.log("==========")
                   reply({
+                    id: result.id
                     message: msg
                   })
                 )
                 .catch(NamespaceDoestNotExist, (err) ->
-                  console.log("ERROR: POST create event, ",err)
-                  Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
+                  console.log("ERROR: NamespaceDoestNotExist reco.events, ",err)
+                  Errors.handle_error(request, Boom.notFound("Namespace Not Found"), reply).code(500)
                 )
                 .catch((err) ->
-                  console.log("Error: ", err) # Something went wrong
-                  reply({message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)})
+                  console.log("Error: reco.events, ", err) # Something went wrong
+                  reply({message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)}).code(500)
                 )
               )
               .catch(thinky.Errors.ValidationError, (err) ->
-                console.log("Error:  db.likes.insert ", userId, itemId)
-                reply({error: err})
+                console.log("Error: ValidationError db.likes.insert ", userId, itemId, err)
+                reply({error: err}).code(500)
               )
               .catch((error) ->
-                console.log("Error:  db.likes.insert ", userId, itemId)
-                reply({error: error})
+                console.log("Error: db.likes.insert ", userId, itemId, error)
+                reply({error: error}).code(500)
               )
           else
             msg = util.format("Error: User %s already liked item %s", userId, itemId)
@@ -301,8 +302,8 @@ ROUTES =
             reply({message: msg})
         )
         .catch((error) ->
-          console.log("Error:  db.likes.insert ", userId, itemId)
-          reply({error: error})
+          console.log("Error:  db.likes.insert ", userId, itemId, error)
+          reply({error: error}).code(500)
         )
     )
 
@@ -316,32 +317,32 @@ ROUTES =
         userId = request.params.userId
         #        TODO: #4 enable namespace filter
         namespace = Utils.GetNamespace(request)
-        person = userId
+
         configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
 
-        reco.recommendations_for_person(namespace, person, configuration)
+        reco.recommendations_for_person(namespace, userId, configuration)
           .then( (result) ->
             if (!result || result.length == 0)
               console.log("== RECOMMEND ERROR ==")
               console.log("===============")
-              reply({recommendations: []})
+              reply({recommendations: []}).code(500)
             else
               console.log("== RECOMMEND USER OK ==")
-              console.log(result)
+              console.log("== length, ",result.recommendations.length)
               console.log("===============")
   #            //resolve items
-              Utils.resolveItems(result, 0, (err, resolved) ->
+              Utils.resolveItems(namespace,result, 0, (err, resolved) ->
                   if (err || !resolved)
                     console.log("Could not execute resolveItems -> ", err)
                     reply({recommendations: result.recommendations})
                   else
-                    console.log("INFO: resolveItems, ", resolved)
+                    console.log("INFO: resolveItems for user length -> ", resolved.recommendations.length)
                     reply({recommendations: resolved.recommendations})
               )
           )
           .catch((err) ->
             console.error("Error: ", err) # // Something went wrong
-            reply({error: err})
+            reply({error: err}).code(500)
           )
     )
 
@@ -353,10 +354,10 @@ ROUTES =
         #get thingId from request
         thingId = request.params.thingId
         namespace = Utils.GetNamespace(request)
-        thing = thingId
+
         configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
 
-        reco.recommendations_for_thing(namespace, thing, configuration)
+        reco.recommendations_for_thing(namespace, thingId, configuration)
           .then( (result) ->
             if (!result || result.length == 0)
               console.log("== RECOMMEND ERROR ==")
@@ -365,20 +366,20 @@ ROUTES =
               reply({recommendations: []})
             else
               console.log("== RECOMMEND THING OK ==",)
-              console.log("== ",thingId,result)
+              console.log("== length ",thingId,result.recommendations.length)
               console.log("===============")
               #            //resolve items
-              Utils.resolveItems(result, 0, (err, resolved) ->
+              Utils.resolveItems(namespace,result, 0, (err, resolved) ->
                 if (err || !resolved)
-                  console.log("Could not execute resolveItems for thing -> ", err)
+                  console.log("Error: Could not execute resolveItems for thing -> ", err)
                   reply({recommendations: result.recommendations})
                 else
-                  console.log("INFO: resolveItems for thing  ", resolved)
+                  console.log("INFO: resolveItems for thing length -> ", resolved.recommendations.length)
                   reply({recommendations: resolved.recommendations})
               )
         ).catch((err) ->
           console.error("Error: ", err) # // Something went wrong
-          reply({error: err})
+          reply({error: err}).code(500)
         )
     )
 

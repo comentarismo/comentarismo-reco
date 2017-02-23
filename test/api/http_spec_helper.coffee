@@ -1,7 +1,8 @@
 process.env.NODE_ENV = 'test'
 
 chai = require 'chai'
-should = chai.should()
+global.should = chai.should()
+global.expect = chai.expect
 
 global.bb = require 'bluebird'
 #global._ = require 'underscore'
@@ -12,7 +13,7 @@ global.moment = require 'moment'
 
 bb.Promise.longStackTraces();
 
-global.GERClient = require './client'
+global.RECOClient = require './client'
 
 
 ServerRecommendationEngine = require('../../server/server.coffee')
@@ -42,7 +43,7 @@ global.server = new ServerRecommendationEngine({
 #    user: 'root',
 #    password: ''
 #  }
-#}})
+#}})\
 
 global.client = null
 
@@ -51,7 +52,7 @@ global.start_server = server.initialize()
   .then(-> server.start())
   .then(->
   console.log("Will configure global.client with URL -> #{server.info.uri}")
-  global.client = new GERClient("#{server.info.uri}")
+  global.client = new RECOClient("#{server.info.uri}")
   server
 )
 

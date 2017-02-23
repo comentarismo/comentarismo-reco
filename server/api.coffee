@@ -61,16 +61,6 @@ get_events_request_schema = event_schema = Joi.object().keys({
 
 Utils = {}
 
-Utils.handle_error = (logger, err, reply) ->
-#  console.log "handle_error -> ", err.stack
-  if err.isBoom
-    logger.log(['error'], err)
-    reply(err)
-  else
-    logger.log(['error'], {error: "#{err}", stack: err.stack})
-    reply({error: "An unexpected error occurred"}).code(500)
-
-
 
 API =
   register: (plugin, options, next) ->
@@ -86,7 +76,7 @@ API =
         .then( (namespaces) ->
           reply({namespaces: namespaces})
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
     plugin.route(
@@ -102,7 +92,7 @@ API =
         .then( ->
           reply({namespace: namespace})
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
     plugin.route(
@@ -122,7 +112,7 @@ API =
         .then( ->
           reply({namespace: namespace})
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
     ########### EVENTS routes ################
@@ -144,9 +134,9 @@ API =
         )
         .catch(NamespaceDoestNotExist, (err) ->
           console.log "Error: POST create event, ",err
-          Utils.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
+          Errors.handle_error(request, Boom.notFound("Namespace Not Found"), reply)
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
     #GET event information
@@ -167,7 +157,7 @@ API =
         .then( (events) ->
           reply({"events": events})
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
 
@@ -203,7 +193,7 @@ API =
         .then( (recommendations) ->
           reply(recommendations)
         )
-        .catch((err) -> Utils.handle_error(request, err, reply))
+        .catch((err) -> Errors.handle_error(request, err, reply))
     )
 
     ########### Maintenance routes ################
@@ -233,7 +223,7 @@ API =
         .spread((init_count, end_count) ->
           reply({ init_count: init_count, end_count: end_count, compression: "#{(1 - (end_count/init_count)) * 100}%" })
         )
-        .catch((err) -> Utils.handle_error(request, err, reply) )
+        .catch((err) -> Errors.handle_error(request, err, reply) )
     )
 
     next()

@@ -44,7 +44,7 @@ describe "namespace routes", ->
       .then( ->
         throw "SHOULD NOT GET HERE"
       )
-      .catch(GERClient.Not200Error, (e) ->
+      .catch(RECOClient.Not200Error, (e) ->
         e.status.should.equal 404
       )
 

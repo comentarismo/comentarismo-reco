@@ -511,7 +511,7 @@
     },
     "chai": {
       "version": "3.5.0",
-      "from": "chai@>=3.0.0 <4.0.0",
+      "from": "https://registry.npmjs.org/chai/-/chai-3.5.0.tgz",
       "resolved": "https://registry.npmjs.org/chai/-/chai-3.5.0.tgz"
     },
     "chai-as-promised": {
