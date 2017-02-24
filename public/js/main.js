@@ -48,7 +48,7 @@ function loadRecs(userId){
         type: "GET",
         success: function(data){
             // add them to ui
-            var recs = data.recommendations
+            var recs = data.recommendations;
             console.log("/users/"+userId+"/recommend", JSON.stringify(recs));
             $('.error').hide();
             $('.success').html("OK: loadRecs "+ userId);
@@ -67,7 +67,7 @@ function loadRecs(userId){
                         var t = recs[i];
                         console.log(t);
                         if (t)
-                            list = list + "<li id='r_"+ t.id +"' class='item'>" + t.thing + "<a href='#' class='btn' onclick=likeItem('" + t.id + "')> like</a></li>"
+                            list = list + "<li id='r_"+ t.id +"' class='item'><img width='100' height='100' src='"+t.image+"'/>" + t.thing + "<a href='#' class='btn' onclick=likeItem('" + t.id + "')> like</a></li>"
                     }
                     html = html + list + "</ul>";
 
@@ -106,17 +106,18 @@ function addUser(){
         data: {
             name: name
         },
+        type: "POST",
         success:function(data){
             window.location.reload();
             $('.error').hide();
-            $('.success').html("OK: addUser "+ name);
+            $('.success').html("OK: addUser "+ name +", ID: "+ data.id);
             $('.success').show();
 
         }, error: function (error) {
             console.log("Error:, addUser, ", error);
             $('.success').hide();
-            $('.error').html("Error:, addUser, "+ JSON.stringify(error))
-            $('.error').show()
+            $('.error').html("Error:, addUser, "+ JSON.stringify(error));
+            $('.error').show();
         },
     });
 }
@@ -128,10 +129,11 @@ function addItem() {
         data: {
             thing:thing
         },
+        type: "POST",
         success: function (data) {
             window.location.reload();
             $('.error').hide();
-            $('.success').html("OK: addItem "+thing);
+            $('.success').html("OK: addItem "+thing +", ID: "+ data.id);
             $('.success').show();
 
         }, error: function (error) {

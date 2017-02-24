@@ -2,7 +2,9 @@ var Schema = function(thinky){
     const Items = thinky.createModel('items', {
         id: thinky.type.string(),
         thing: thinky.type.string(),
-        namespace: thinky.type.string()
+        namespace: thinky.type.string(),
+        image: thinky.type.string(),
+        link: thinky.type.string(),
     });
 
     const User = thinky.createModel('user', {

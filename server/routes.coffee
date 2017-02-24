@@ -8,6 +8,8 @@ NAMESPACE = process.env.NAMESPACE || "comentarismo"
 bb = require 'bluebird'
 _ = require "underscore"
 
+http_schema = require './http_schema'
+
 
 # RECO
 reco = require './reco'
@@ -36,6 +38,8 @@ Utils.resolveItems = (namespace,result, count, cb) =>
       ]).spread(( doc) ->
         t.thing = doc.thing
         t.id = doc.id
+        t.image = doc.image if doc.image
+        t.link = doc.link if doc.link
         count = count + 1
         Utils.resolveItems(namespace,result, count, cb)
       ).catch(thinky.Errors.ValidationError, (err) ->
@@ -171,10 +175,17 @@ ROUTES =
     ########### NAMESPACE routes add a user ################
 
     plugin.route(
-      method: 'GET',
+      method: 'POST',
       path: '/users/add',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: http_schema.add_users_schema
+
       handler: (request, reply) =>
-        name = request.query.name
+        name = request.payload.name
         namespace = Utils.GetNamespace(request)
 
         ns_user = name
@@ -184,10 +195,11 @@ ROUTES =
 #        console.log("Will save user -> ", ns_user)
 
         user   = new User({
+          namespace : namespace
           id        : thinky.r.uuid(ns_user)
           name      : name
-          namespace : namespace
         })
+
         User.save(user , {conflict:'update'}).then((result) ->
           console.log("/users/add saved -> ",namespace, ns_user, result.id)
           reply({message: "ok", "id":result.id})
@@ -204,23 +216,36 @@ ROUTES =
     ########### NAMESPACE routes add an item ################
 
     plugin.route(
-      method: 'GET',
+      method: 'POST',
       path: '/items/add',
+      config:
+        payload:
+          parse: true
+          override: 'application/json'
+        validate:
+          payload: http_schema.add_items_schema
       handler: (request, reply) ->
-        thing = request.query.thing
+        id = request.payload.id
+        image = request.payload.image
+        link = request.payload.link
+        thing = request.payload.thing
         namespace = Utils.GetNamespace(request)
 
         ns_thing = thing
 
-        if thing.indexOf(namespace) == -1
-          ns_thing = namespace + "_"+ thing
+        if id
+          ns_thing = namespace + "_" + id
+        else if thing.indexOf(namespace) == -1
+          ns_thing = namespace + "_" + thing
 
 #        console.log("Will save thing :O -> ", ns_thing)
 
         items   = new Items({
+          namespace : namespace,
           id        : thinky.r.uuid(ns_thing)
           thing     : thing
-          namespace : namespace
+          image     : image,
+          link      : link,
         })
 
         Items.save(items , {conflict:'update'}).then((result) ->
@@ -286,6 +311,11 @@ ROUTES =
                   reply({message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)}).code(500)
                 )
               )
+              .catch(thinky.Errors.DuplicatePrimaryKey, (err) ->
+                console.log("Error: DuplicatePrimaryKey db.likes.insert, will ignore and assume we already did this action ", userId, itemId, err)
+                msg = util.format("User %s %s already liked item %s %s", user.id, user.name, item.thing, item.id)
+                reply({message: msg, error: err}).code(200)
+              )
               .catch(thinky.Errors.ValidationError, (err) ->
                 console.log("Error: ValidationError db.likes.insert ", userId, itemId, err)
                 reply({error: err}).code(500)
@@ -317,6 +347,8 @@ ROUTES =
         userId = request.params.userId
         #        TODO: #4 enable namespace filter
         namespace = Utils.GetNamespace(request)
+
+        console.log("/users/#{userId}/recommend", userId,namespace)
 
         configuration = _.defaults({"actions": {"view": 5, "buy": 10}}, default_configuration)
 

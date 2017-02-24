@@ -105,18 +105,29 @@ class RECOClient
 
 ########### Comentarismo Namespace Website routes ################
 
-  create_user: (namespace, name) ->
+  create_user: (namespace, name, id) ->
     req = {
-      method: "GET",
-      uri: "#{@server_uri}/users/add?name=#{name}&namespace=#{namespace}"
+      method: "POST",
+      body: JSON.stringify({
+        namespace: namespace
+        id: id
+        name: name
+        }),
+      uri: "#{@server_uri}/users/add"
     }
     request(req)
       .then(process_response)
 
-  create_thing: (namespace, thing) ->
+  create_thing: (namespace, thing, image, link) ->
     req = {
-      method: "GET",
-      uri: "#{@server_uri}/items/add?thing=#{thing}&namespace=#{namespace}"
+      method: "POST",
+      body: JSON.stringify({
+        namespace: namespace
+        thing: thing
+        image: image
+        link: link
+      }),
+      uri: "#{@server_uri}/items/add"
     }
     request(req)
       .then(process_response)

@@ -136,17 +136,18 @@ html
               ul.itemList
                 - each i in items
                   li.item(id="i_#{i.id}")
-                    | #{i.thing} &nbsp;&nbsp;&nbsp;
+                    img(width=100 height=100 src="#{i.image}")
+                    | &nbsp;&nbsp;&nbsp; #{i.thing} &nbsp;&nbsp;&nbsp;
                     a.btn(onclick="likeItem('#{i.id}');") like
 
 
           td
             div(style="height:400px; overflow:auto;" id="recList")
               ul.recList
-              - each r in recommendations
-                li.recommendation(id="r_#{r.thing}")
-                  | #{r.thing} &nbsp;&nbsp;&nbsp;
-                  a.btn(onclick="likeItem('#{i.id}');") like
+                - each r in recommendations
+                  li.recommendation(id="r_#{r.thing}")
+                    | #{r.thing} &nbsp;&nbsp;&nbsp;
+                    a.btn(onclick="likeItem('#{r.id}');") like
 
   div(class='success' style='display:none')
   div(class='error' style='display:none')

@@ -3,7 +3,8 @@
 describe 'User recommendation routes', ->
   describe 'User like things and get recommendations', ->
     it 'should create users & things, like things, recommend thing for a user', ->
-      ns = random_namespace()
+#      ns = random_namespace()
+      ns = "comentarismo"
       edsonID = ""
       mariaID = ""
       francisID = ""
@@ -17,6 +18,20 @@ describe 'User recommendation routes', ->
       girlsID = ""
       beachID = ""
       beerID = ""
+
+      link = ""
+      image = [
+          {image:"http://greatist.com/sites/default/files/running.jpg"},
+          {image:"http://images.gr-assets.com/books/1453417993l/10534.jpg"},
+          {image:"http://bendcitychurch.org/wp-content/uploads/2013/07/eat-more-sandwich.jpg?w=640"},
+          {image:"http://animal-dream.com/data_images/money/money3.jpg"},
+          {image:"https://thedimlight.files.wordpress.com/2012/07/harem.jpg"},
+          {image:"http://www.exotisiv.com/sites/default/files/swimming-pigs-beach-bahamas-2.jpg"},
+          {image:"https://s-media-cache-ak0.pinimg.com/originals/d3/2b/67/d32b671cb16540444292901f29d3f098.jpg"},
+          {image:"http://jornalggn.com.br/sites/default/files/u16-2016/fotortemertrofeu.jpg"},
+          {image:"http://jornalggn.com.br/sites/default/files/u19146/640px-foratemer.jpg"},
+          {image:"https://static.independent.co.uk/s3fs-public/thumbnails/image/2016/10/28/16/gettyimages-1134009.jpg"}
+      ]
 
       start_server.then(->
         client.create_namespace(ns)
@@ -53,13 +68,13 @@ describe 'User recommendation routes', ->
         clovisID = r5[0].id
 
       ).then(-> bb.all([
-        client.create_thing(ns,'Run')
-        client.create_thing(ns,'Book')
-        client.create_thing(ns,'Eat')
-        client.create_thing(ns,'Money')
-        client.create_thing(ns,'Girls')
-        client.create_thing(ns,'Beach')
-        client.create_thing(ns,'Beer')
+        client.create_thing(ns,'Run', image[0].image,image[0].image)
+        client.create_thing(ns,'Book', image[1].image,image[1].image)
+        client.create_thing(ns,'Eat', image[2].image,image[2].image)
+        client.create_thing(ns,'Money', image[3].image,image[3].image)
+        client.create_thing(ns,'Girls', image[4].image,image[4].image)
+        client.create_thing(ns,'Beach', image[5].image,image[5].image)
+        client.create_thing(ns,'Beer', image[6].image,image[6].image)
       ])).spread((r1, r2, r3, r4, r5,r6,r7) ->
         should.exist(r1)
         should.exist(r2)
@@ -192,9 +207,10 @@ describe 'User recommendation routes', ->
         r2[0].recommendations.should.be.instanceof(Array)
         r2[0].recommendations.length.should.be.greaterThan(5)
 
-      ).then(->
-        client.destroy_namespace(ns)
       )
+#        .then(->
+#        client.destroy_namespace(ns)
+#      )
 
     it 'should start, check health, stop server and start again', ->
       start_server.then(->
