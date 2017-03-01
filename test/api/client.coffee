@@ -112,16 +112,17 @@ class RECOClient
         namespace: namespace
         id: id
         name: name
-        }),
+      }),
       uri: "#{@server_uri}/users/add"
     }
     request(req)
       .then(process_response)
 
-  create_thing: (namespace, thing, image, link) ->
+  create_thing: (namespace, thing, image, link, id) ->
     req = {
       method: "POST",
       body: JSON.stringify({
+        id:id,
         namespace: namespace
         thing: thing
         image: image

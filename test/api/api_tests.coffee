@@ -19,7 +19,6 @@ describe 'User recommendation routes', ->
       beachID = ""
       beerID = ""
 
-      link = ""
       image = [
           {image:"http://greatist.com/sites/default/files/running.jpg"},
           {image:"http://images.gr-assets.com/books/1453417993l/10534.jpg"},
@@ -39,11 +38,11 @@ describe 'User recommendation routes', ->
         client.clear()
       ).then(->
         bb.all([
-          client.create_user(ns,'Edson')
-          client.create_user(ns,'Maria')
-          client.create_user(ns,'Francis')
-          client.create_user(ns,'John')
-          client.create_user(ns,'Clovis')
+          client.create_user(ns,'Edson','EdsonID')
+          client.create_user(ns,'Maria','MariaID')
+          client.create_user(ns,'Francis','FrancisID')
+          client.create_user(ns,'John','JohnID')
+          client.create_user(ns,'Clovis','ClovisID')
         ])
       ).spread((r1, r2, r3, r4, r5) ->
         should.exist(r1)
@@ -68,13 +67,13 @@ describe 'User recommendation routes', ->
         clovisID = r5[0].id
 
       ).then(-> bb.all([
-        client.create_thing(ns,'Run', image[0].image,image[0].image)
-        client.create_thing(ns,'Book', image[1].image,image[1].image)
-        client.create_thing(ns,'Eat', image[2].image,image[2].image)
-        client.create_thing(ns,'Money', image[3].image,image[3].image)
-        client.create_thing(ns,'Girls', image[4].image,image[4].image)
-        client.create_thing(ns,'Beach', image[5].image,image[5].image)
-        client.create_thing(ns,'Beer', image[6].image,image[6].image)
+        client.create_thing(ns,'Run', image[0].image,image[0].image, "RunID")
+        client.create_thing(ns,'Book', image[1].image,image[1].image, "BookID")
+        client.create_thing(ns,'Eat', image[2].image,image[2].image, "EatID")
+        client.create_thing(ns,'Money', image[3].image,image[3].image, "MoneyID")
+        client.create_thing(ns,'Girls', image[4].image,image[4].image, "GirlsID")
+        client.create_thing(ns,'Beach', image[5].image,image[5].image, "BeachID")
+        client.create_thing(ns,'Beer', image[6].image,image[6].image, "BeerID")
       ])).spread((r1, r2, r3, r4, r5,r6,r7) ->
         should.exist(r1)
         should.exist(r2)
