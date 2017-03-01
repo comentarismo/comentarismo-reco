@@ -87,6 +87,7 @@ class ServerRecommendationEngine
       @_server = new Hapi.Server()
 
     @_server.connection({port: @options.port});
+    @_server.ext('onPreResponse', @addCORS)
     @info = @_server.info
 
   setup_server: ->
@@ -194,6 +195,29 @@ class ServerRecommendationEngine
       d.resolve()
     )
     d.promise
+
+  addCORS: (request, reply) ->
+    if (!request.headers.origin)
+      reply.continue()
+    else
+      response = request.response.output if request.response.isBoom
+      response = request.response if !request.response.isBoom
+
+      response.headers['access-control-allow-origin'] = request.headers.origin
+      response.headers['access-control-allow-credentials'] = 'true'
+      if (request.method != 'options')
+        reply.continue()
+      else
+        response.statusCode = 200
+        response.headers['access-control-expose-headers'] = 'content-type, content-length, etag'
+        response.headers['access-control-max-age'] = 60 * 10
+        if (request.headers['access-control-request-headers'])
+          response.headers['access-control-allow-headers'] = request.headers['access-control-request-headers']
+
+        if (request.headers['access-control-request-method'])
+          response.headers['access-control-allow-methods'] = request.headers['access-control-request-method']
+
+        reply.continue()
 
 
 module.exports = ServerRecommendationEngine

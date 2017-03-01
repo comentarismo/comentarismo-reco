@@ -128,8 +128,6 @@ ROUTES =
 
         reco.esm._r.db('rethinkdb').table('server_status').run().then((status) ->
           reply({status: status, ip: ip})
-          .header("Access-Control-Allow-Origin", "*")
-          .header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
         ).catch((err) -> console.log("Error: ",err) reply({error: err}).code(500) )
     )
 
@@ -145,7 +143,7 @@ ROUTES =
             Likes.delete().run()
         ]).spread((user , items , likes) ->
             console.log("Removed  User, Items, Likes ", user, items, likes)
-            reply({status: "ok", ip: ip}).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+            reply({status: "ok", ip: ip})
         ).catch((error) -> console.log("Error: ",err) reply({error: error}).code(500))
     )
 
