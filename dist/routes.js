@@ -1,7 +1,5 @@
 (function() {
-  var Datastore, Errors, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, Utils, _, bb, db, hapigerjs, http_schema, ip, reco, util;
-
-  Datastore = require('nedb');
+  var Errors, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, Utils, _, bb, db, hapigerjs, http_schema, ip, moment, reco, util;
 
   hapigerjs = require("hapigerjs");
 
@@ -14,6 +12,8 @@
   bb = require('bluebird');
 
   _ = require("underscore");
+
+  moment = require("moment");
 
   http_schema = require('./http_schema');
 

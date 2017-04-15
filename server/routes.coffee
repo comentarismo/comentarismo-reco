@@ -1,4 +1,4 @@
-Datastore = require('nedb')
+
 hapigerjs = require("hapigerjs")
 util = require('util')
 
@@ -7,6 +7,7 @@ NAMESPACE = process.env.NAMESPACE || "comentarismo"
 
 bb = require 'bluebird'
 _ = require "underscore"
+moment = require "moment"
 
 http_schema = require './http_schema'
 
