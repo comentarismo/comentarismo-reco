@@ -51,18 +51,6 @@ Utils.resolveItems = (namespace,result, count, cb) =>
         Utils.resolveItems(namespace,result, count, cb)
       )
 
-#      db.items.findOne({_id: t.thing}, (err, doc) ->
-#        if (err || !doc)
-#          console.log("Error: db.items.findOne, ", err)
-#          cb(null, result)
-#        else
-#          t.thing = doc.thing
-#          t._id = doc._id
-#          console.log("Transformed thing -> ", t)
-#          count = count + 1
-#          Utils.resolveItems(result, count, cb)
-#      )
-
 Utils.GetNamespace = (request) ->
     if request.query.namespace
       request.query.namespace
@@ -287,9 +275,10 @@ ROUTES =
             })
             likes.saveAll({user : true, items: true},{ conflict:'update'})
               .then((result) ->
-                console.log("==== likes.saveAll -> ", result.id)
+                expireAt = moment().add(1, 'year').format()
+                console.log("==== likes.saveAll -> ", result.id, expireAt)
                 #TODO config date
-                reco.events([{"namespace":namespace,"person": user.id,"action": "buy","thing": item.id,"expires_at": "2017-03-30"}])
+                reco.events([{"namespace":namespace,"person": user.id,"action": "buy","thing": item.id,"expires_at": expireAt}])
                 .then((events) ->
                   msg = util.format("User %s %s liked item %s %s", user.id, user.name, item.thing, item.id)
                   console.log("== LIKE ==")

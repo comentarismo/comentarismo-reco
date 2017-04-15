@@ -130,53 +130,59 @@
       })(this)).spread((function(_this) {
         return function(events_created, schema_created) {
           var promises;
-          promises = [];
-          promises = promises.concat([
-            _this._r.table(namespace + "_events").indexCreate("created_at").run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("expires_at", _this._r.row("expires_at")["default"](false)).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person").run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_thing", [_this._r.row("person"), _this._r.row("thing")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_action", [_this._r.row("person"), _this._r.row("action")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_action_thing", [_this._r.row("person"), _this._r.row("action"), _this._r.row("thing")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_action_created_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_created_at", [_this._r.row("person"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_action_expires_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_thing_created_at", [_this._r.row("person"), _this._r.row("thing"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_expires_at_created_at", [_this._r.row("person"), _this._r.row("expires_at")["default"](false), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("person_action_expires_at_created_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("created_at_person_action_expires_at", [_this._r.row("created_at"), _this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("thing_action", [_this._r.row("thing"), _this._r.row("action")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("thing_action_person_created_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("person"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("thing_action_created_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("thing_action_created_at_expires_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("created_at"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("thing_created_at", [_this._r.row("thing"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("action_created_at", [_this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
-              return _this.check_err(e);
-            }), _this._r.table(namespace + "_events").indexCreate("action").run()["catch"](function(e) {
-              return _this.check_err(e);
-            })
-          ]);
-          return bb.all(promises).then(function() {
-            return _this._r.table(namespace + "_events").indexWait().run();
-          });
+          if (schema_created) {
+            console.log("table namespaces created ok");
+          }
+          if (events_created) {
+            console.log("table " + namespace + "_events created ok");
+            promises = [];
+            promises = promises.concat([
+              _this._r.table(namespace + "_events").indexCreate("created_at").run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("expires_at", _this._r.row("expires_at")["default"](false)).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person").run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_thing", [_this._r.row("person"), _this._r.row("thing")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_action", [_this._r.row("person"), _this._r.row("action")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_action_thing", [_this._r.row("person"), _this._r.row("action"), _this._r.row("thing")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_action_created_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_created_at", [_this._r.row("person"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_action_expires_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_thing_created_at", [_this._r.row("person"), _this._r.row("thing"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_expires_at_created_at", [_this._r.row("person"), _this._r.row("expires_at")["default"](false), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("person_action_expires_at_created_at", [_this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("created_at_person_action_expires_at", [_this._r.row("created_at"), _this._r.row("person"), _this._r.row("action"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("thing_action", [_this._r.row("thing"), _this._r.row("action")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("thing_action_person_created_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("person"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("thing_action_created_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("thing_action_created_at_expires_at", [_this._r.row("thing"), _this._r.row("action"), _this._r.row("created_at"), _this._r.row("expires_at")["default"](false)]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("thing_created_at", [_this._r.row("thing"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("action_created_at", [_this._r.row("action"), _this._r.row("created_at")]).run()["catch"](function(e) {
+                return _this.check_err(e);
+              }), _this._r.table(namespace + "_events").indexCreate("action").run()["catch"](function(e) {
+                return _this.check_err(e);
+              })
+            ]);
+            return bb.all(promises).then(function() {
+              return _this._r.table(namespace + "_events").indexWait().run();
+            });
+          }
         };
       })(this)).then((function(_this) {
         return function() {

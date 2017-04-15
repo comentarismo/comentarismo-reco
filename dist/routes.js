@@ -1,5 +1,5 @@
 (function() {
-  var Datastore, Errors, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, Utils, _, bb, db, hapigerjs, ip, reco, util;
+  var Datastore, Errors, NAMESPACE, NamespaceDoestNotExist, PORT, ROUTES, Utils, _, bb, db, hapigerjs, http_schema, ip, reco, util;
 
   Datastore = require('nedb');
 
@@ -14,6 +14,8 @@
   bb = require('bluebird');
 
   _ = require("underscore");
+
+  http_schema = require('./http_schema');
 
   reco = require('./reco');
 
@@ -38,6 +40,12 @@
           return bb.all([Items.get(ns_thing).run()]).spread(function(doc) {
             t.thing = doc.thing;
             t.id = doc.id;
+            if (doc.image) {
+              t.image = doc.image;
+            }
+            if (doc.link) {
+              t.link = doc.link;
+            }
             count = count + 1;
             return Utils.resolveItems(namespace, result, count, cb);
           })["catch"](thinky.Errors.ValidationError, function(err) {
@@ -119,7 +127,7 @@
               return reply({
                 status: status,
                 ip: ip
-              }).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+              });
             })["catch"](function(err) {
               return console.log("Error: ", err)(reply({
                 error: err
@@ -138,7 +146,7 @@
               return reply({
                 status: "ok",
                 ip: ip
-              }).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+              });
             })["catch"](function(error) {
               return console.log("Error: ", err)(reply({
                 error: error
@@ -175,21 +183,30 @@
         })(this)
       });
       plugin.route({
-        method: 'GET',
+        method: 'POST',
         path: '/users/add',
+        config: {
+          payload: {
+            parse: true,
+            override: 'application/json'
+          },
+          validate: {
+            payload: http_schema.add_users_schema
+          }
+        },
         handler: (function(_this) {
           return function(request, reply) {
             var name, namespace, ns_user, user;
-            name = request.query.name;
+            name = request.payload.name;
             namespace = Utils.GetNamespace(request);
             ns_user = name;
             if (name.indexOf(namespace) === -1) {
               ns_user = namespace + "_" + name;
             }
             user = new User({
+              namespace: namespace,
               id: thinky.r.uuid(ns_user),
-              name: name,
-              namespace: namespace
+              name: name
             });
             return User.save(user, {
               conflict: 'update'
@@ -214,20 +231,36 @@
         })(this)
       });
       plugin.route({
-        method: 'GET',
+        method: 'POST',
         path: '/items/add',
+        config: {
+          payload: {
+            parse: true,
+            override: 'application/json'
+          },
+          validate: {
+            payload: http_schema.add_items_schema
+          }
+        },
         handler: function(request, reply) {
-          var items, namespace, ns_thing, thing;
-          thing = request.query.thing;
+          var id, image, items, link, namespace, ns_thing, thing;
+          id = request.payload.id;
+          image = request.payload.image;
+          link = request.payload.link;
+          thing = request.payload.thing;
           namespace = Utils.GetNamespace(request);
           ns_thing = thing;
-          if (thing.indexOf(namespace) === -1) {
+          if (id) {
+            ns_thing = namespace + "_" + id;
+          } else if (thing.indexOf(namespace) === -1) {
             ns_thing = namespace + "_" + thing;
           }
           items = new Items({
+            namespace: namespace,
             id: thinky.r.uuid(ns_thing),
             thing: thing,
-            namespace: namespace
+            image: image,
+            link: link
           });
           return Items.save(items, {
             conflict: 'update'
@@ -276,14 +309,16 @@
                 }, {
                   conflict: 'update'
                 }).then(function(result) {
-                  console.log("==== likes.saveAll -> ", result.id);
+                  var expireAt;
+                  expireAt = moment().add(1, 'year').format();
+                  console.log("==== likes.saveAll -> ", result.id, expireAt);
                   return reco.events([
                     {
                       "namespace": namespace,
                       "person": user.id,
                       "action": "buy",
                       "thing": item.id,
-                      "expires_at": "2017-03-30"
+                      "expires_at": expireAt
                     }
                   ]).then(function(events) {
                     var msg;
@@ -304,6 +339,14 @@
                       message: util.format("Something went wrong. When User %s liked item %s", userId, itemId)
                     }).code(500);
                   });
+                })["catch"](thinky.Errors.DuplicatePrimaryKey, function(err) {
+                  var msg;
+                  console.log("Error: DuplicatePrimaryKey db.likes.insert, will ignore and assume we already did this action ", userId, itemId, err);
+                  msg = util.format("User %s %s already liked item %s %s", user.id, user.name, item.thing, item.id);
+                  return reply({
+                    message: msg,
+                    error: err
+                  }).code(200);
                 })["catch"](thinky.Errors.ValidationError, function(err) {
                   console.log("Error: ValidationError db.likes.insert ", userId, itemId, err);
                   return reply({
@@ -341,6 +384,7 @@
             var configuration, namespace, userId;
             userId = request.params.userId;
             namespace = Utils.GetNamespace(request);
+            console.log("/users/" + userId + "/recommend", userId, namespace);
             configuration = _.defaults({
               "actions": {
                 "view": 5,

@@ -21,28 +21,34 @@ npm run start
 # Tests for Comentarismo Recomendation Engine (RECO) Server
 
 ## Client API for JS Plugin
-`mocha --opts test/api/mocha.opts test/api/api_tests.coffee`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/api_tests.coffee`
 
 ### API Events
-`mocha --opts test/api/mocha.opts test/api/events_routes_tests.coffee`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/events_routes_tests.coffee`
 
 ### API maintenance
-`mocha --opts test/api/mocha.opts test/api/maintenance_routes_tests.coffee`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/maintenance_routes_tests.coffee`
 
 ### API namespace
-`mocha --opts test/api/mocha.opts test/api/namespace_routes_tests.coffee`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/namespace_routes_tests.coffee`
 
 ### API recommendations
-`mocha --opts test/api/mocha.opts test/api/recommendations_routes_tests.coffee`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/recommendations_routes_tests.coffee`
 
 ### API ALL IN ONE
-`mocha --opts test/api/mocha.opts test/api/`
+`node_modules/.bin/mocha --opts test/api/mocha.opts test/api/`
+
+### ESM ALL IN ONE
+`node_modules/.bin/mocha --opts test/esms/mocha.opts test/esms/`
+
+### GER ALL IN ONE
+`node_modules/.bin/mocha --opts test/ger/mocha.opts test/ger/`
 
 ### RetinkDB Recommendation Test suite
-`mocha --opts test/mocha.opts test/rethinkdb_esm_test.coffee`
+`node_modules/.bin/mocha test/esms/mocha.opts --opts test/esms/all_esms_rethinkdb_esm_test.coffee`
 
 ### In Memory(Legacy) Recommendation Test suite
-`mocha --opts test/mocha.opts test/in_memory_tests.coffee`
+`node_modules/.bin/mocha --opts test/esms/mocha.opts test/esms/all_esms_in_memory_tests.coffee`
 
 ### All Together (Client,API,RethinkDB,Memory) Test suite
 `npm run test`
