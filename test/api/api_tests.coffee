@@ -3,8 +3,8 @@
 describe 'User recommendation routes', ->
   describe 'User like things and get recommendations', ->
     it 'should create users & things, like things, recommend thing for a user', ->
-#      ns = random_namespace()
-      ns = "comentarismo"
+      ns = random_namespace()
+#      ns = "comentarismo"
       edsonID = ""
       mariaID = ""
       francisID = ""
@@ -207,10 +207,20 @@ describe 'User recommendation routes', ->
         r2[0].recommendations.length.should.be.greaterThan(5)
 
       )
-#        .then(->
-#        client.destroy_namespace(ns)
-#      )
+      .then(->
+        client.destroy_namespace(ns)
+      )
 
+    it 'should not create things without namespace, thing, image, link', ->
+      ns = "comentarismo"
+      t = undefined
+      client.create_thing(ns, t, t ,t , t)
+      .then( ->
+        throw "SHOULD NOT GET HERE"
+      ).catch(RECOClient.Not200Error, (e) ->
+        e.status.should.equal 400
+      )
+      
     it 'should start, check health, stop server and start again', ->
       start_server.then(->
         bb.all([

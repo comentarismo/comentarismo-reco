@@ -1,5 +1,5 @@
 (function() {
-  var Joi, add_items_schema, add_users_schema, configuration_schema, event_schema, events_request_schema, get_events_request_schema, namespace_request_schema, namespace_schema, recommendation_request_schema;
+  var Joi, add_items_schema, add_users_schema, configuration_schema, event_schema, events_request_schema, get_events_request_schema, namespace_request_schema, namespace_schema, recommend_thing, recommendation_request_schema, user_like_thing, user_recommend_thing;
 
   Joi = require('joi');
 
@@ -53,16 +53,29 @@
 
   add_users_schema = Joi.object().keys({
     namespace: namespace_schema.required(),
-    id: Joi.string(),
-    name: Joi.string()
+    id: Joi.string().required(),
+    name: Joi.string().required()
   });
 
   add_items_schema = Joi.object().keys({
     namespace: namespace_schema.required(),
-    id: Joi.string(),
-    thing: Joi.string(),
-    image: Joi.string(),
-    link: Joi.string()
+    id: Joi.string().required(),
+    thing: Joi.string().required(),
+    image: Joi.string().required(),
+    link: Joi.string().required()
+  });
+
+  user_recommend_thing = Joi.object().keys({
+    userId: Joi.string().required()
+  });
+
+  recommend_thing = Joi.object().keys({
+    thingId: Joi.string().required()
+  });
+
+  user_like_thing = Joi.object().keys({
+    userId: Joi.string().required(),
+    itemId: Joi.string().required()
   });
 
   module.exports = {
@@ -73,7 +86,10 @@
     configuration_schema: configuration_schema,
     namespace_request_schema: namespace_request_schema,
     add_users_schema: add_users_schema,
-    add_items_schema: add_items_schema
+    add_items_schema: add_items_schema,
+    user_recommend_thing: user_recommend_thing,
+    recommend_thing: recommend_thing,
+    user_like_thing: user_like_thing
   };
 
 }).call(this);

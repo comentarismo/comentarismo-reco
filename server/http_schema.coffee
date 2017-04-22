@@ -50,16 +50,32 @@ get_events_request_schema = event_schema = Joi.object().keys({
 
 add_users_schema = Joi.object().keys({
   namespace: namespace_schema.required()
-  id: Joi.string()
-  name: Joi.string()
+  id: Joi.string().required()
+  name: Joi.string().required()
 })
 
 add_items_schema = Joi.object().keys({
   namespace: namespace_schema.required()
-  id: Joi.string()
-  thing: Joi.string()
-  image: Joi.string()
-  link: Joi.string()
+  id: Joi.string().required()
+  thing: Joi.string().required()
+  image: Joi.string().required()
+  link: Joi.string().required()
+})
+
+user_recommend_thing = Joi.object().keys({
+#  namespace: namespace_schema.required()
+  userId: Joi.string().required()
+})
+
+recommend_thing = Joi.object().keys({
+#  namespace: namespace_schema.required()
+  thingId: Joi.string().required()
+})
+
+user_like_thing = Joi.object().keys({
+#  namespace: namespace_schema.required()
+  userId: Joi.string().required()
+  itemId: Joi.string().required()
 })
 
 module.exports = {
@@ -71,4 +87,7 @@ module.exports = {
   namespace_request_schema
   add_users_schema
   add_items_schema
+  user_recommend_thing
+  recommend_thing
+  user_like_thing
 };

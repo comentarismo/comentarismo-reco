@@ -42,12 +42,12 @@ describe 'events routes', ->
       .spread( (body, resp) ->
         client.show_events(ns, 'p')
       )
-      .spread( (body, resp) ->
-        body.events[0].person.should.equal 'p'
-      )
-      .then( ->
-        client.destroy_namespace(ns)
-      )
+#      .spread( (body, resp) ->
+#        body.events[0].person.should.equal 'p'
+#      )
+#      .then( ->
+#        client.destroy_namespace(ns)
+#      )
 
 
 

@@ -266,9 +266,18 @@
             conflict: 'update'
           }).then(function(result) {
             console.log("/items/add saved -> ", namespace, thing, result.id);
-            return reply({
-              message: "ok",
-              "id": result.id
+            namespace = request.payload.namespace;
+            return reco.initialize_namespace(namespace).then(function() {
+              return reply({
+                message: "ok",
+                "id": result.id
+              });
+            })["catch"](function(err) {
+              console.log("Error: initialize_namespace, ", err);
+              return reply({
+                message: "ok",
+                "id": result.id
+              });
             });
           })["catch"](thinky.Errors.ValidationError, function(err) {
             console.log("Validation Error: " + err.message);
@@ -287,6 +296,12 @@
       plugin.route({
         method: 'GET',
         path: '/users/{userId}/like/{itemId}',
+        config: {
+          validate: {
+            params: http_schema.user_like_thing,
+            query: http_schema.namespace_request_schema
+          }
+        },
         handler: (function(_this) {
           return function(request, reply) {
             var itemId, namespace, userId;
@@ -379,6 +394,12 @@
       plugin.route({
         method: 'GET',
         path: '/users/{userId}/recommend',
+        config: {
+          validate: {
+            params: http_schema.user_recommend_thing,
+            query: http_schema.namespace_request_schema
+          }
+        },
         handler: (function(_this) {
           return function(request, reply) {
             var configuration, namespace, userId;
@@ -428,6 +449,12 @@
       plugin.route({
         method: 'GET',
         path: '/thing/{thingId}/recommend',
+        config: {
+          validate: {
+            params: http_schema.recommend_thing,
+            query: http_schema.namespace_request_schema
+          }
+        },
         handler: (function(_this) {
           return function(request, reply) {
             var configuration, namespace, thingId;

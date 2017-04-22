@@ -237,7 +237,18 @@ ROUTES =
 
         Items.save(items , {conflict:'update'}).then((result) ->
           console.log("/items/add saved -> ",namespace, thing, result.id)
-          reply({message: "ok", "id":result.id})
+          
+#          check namespace exists, otherwise create
+          namespace = request.payload.namespace
+          reco.initialize_namespace(namespace)
+            .then( ->
+              reply({message: "ok", "id":result.id})
+          )
+            .catch((err) ->
+              console.log("Error: initialize_namespace, ",err)
+              reply({message: "ok", "id":result.id})
+          )
+          
         )
         .catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " + err.message)
@@ -255,6 +266,10 @@ ROUTES =
     plugin.route(
       method: 'GET',
       path: '/users/{userId}/like/{itemId}',
+      config:
+        validate:
+          params: http_schema.user_like_thing
+          query:  http_schema.namespace_request_schema
       handler: (request, reply) =>
         userId = request.params.userId
         itemId = request.params.itemId
@@ -330,6 +345,10 @@ ROUTES =
     plugin.route(
       method: 'GET',
       path: '/users/{userId}/recommend',
+      config:
+        validate:
+          params: http_schema.user_recommend_thing
+          query:  http_schema.namespace_request_schema
       handler: (request, reply) =>
         #get userId from request
         userId = request.params.userId
@@ -369,6 +388,10 @@ ROUTES =
     plugin.route(
       method: 'GET',
       path: '/thing/{thingId}/recommend',
+      config:
+        validate:
+          params: http_schema.recommend_thing
+          query:  http_schema.namespace_request_schema
       handler: (request, reply) =>
 
         #get thingId from request
