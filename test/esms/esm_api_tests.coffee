@@ -1,11 +1,23 @@
 esm_tests = (ESM) ->
-  ns = "default"
 
+  ns = "comentarismo_test"
+  
+#  # runs before each test in this block
+#  beforeEach('Should create a fresh namespace ', ->
+#    ns = random_namespace()
+#  )
+#
+  # runs after each test in this block
+  afterEach('should clean namespace after '+ ns, ->
+    clean(ns)
+  )
+  
+  
   describe 'construction', ->
     describe 'namespace operations', ->
       it '#list_namespaces should list all namespaces', ->
-        ns1 = "namespace1"
-        ns2 = "namespace2"
+        ns1 = random_namespace()
+        ns2 = random_namespace()
         esm = new_esm(ESM) #pass knex as it might be needed
         bb.all([esm.destroy(ns1), esm.destroy(ns2)])
         .then( ->
@@ -23,53 +35,55 @@ esm_tests = (ESM) ->
           list.should.include ns1
           list.should.include ns2
         )
+        .then( ->
+          clean(ns1)
+        )
+        .then( ->
+          clean(ns2)
+        )
 
       it 'should initialize namespace', ->
-        namespace = "namespace"
         esm = new_esm(ESM)
-        esm.destroy(namespace)
-        .then( -> esm.exists(namespace))
+        esm.destroy(ns)
+        .then( -> esm.exists(ns))
         .then( (exist) -> exist.should.equal false)
-        .then( -> esm.initialize(namespace))
-        .then( -> esm.exists(namespace))
+        .then( -> esm.initialize(ns))
+        .then( -> esm.exists(ns))
         .then( (exist) -> exist.should.equal true)
 
       it 'should sucessfully initialize namespace with default', ->
         #based on an error where default is a reserved name in postgres
-        namespace = "new_namespace"
         esm = new_esm(ESM)
-        esm.destroy(namespace)
-        .then( -> esm.exists(namespace))
+        esm.destroy(ns)
+        .then( -> esm.exists(ns))
         .then( (exist) -> exist.should.equal false)
-        .then( -> esm.initialize(namespace))
-        .then( -> esm.exists(namespace))
+        .then( -> esm.initialize(ns))
+        .then( -> esm.exists(ns))
         .then( (exist) -> exist.should.equal true)
-
+        
       it 'should start with no events', ->
-        namespace = "namespace"
         esm = new_esm(ESM)
-        esm.destroy(namespace)
-        .then( -> esm.initialize(namespace))
-        .then( -> esm.count_events(namespace))
+        esm.destroy(ns)
+        .then( -> esm.initialize(ns))
+        .then( -> esm.count_events(ns))
         .then( (count) ->
           count.should.equal 0
         )
 
       it 'should not error out or remove events if re-initialized', ->
-        namespace = "namespace"
         esm = new_esm(ESM)
         esm.destroy()
-        .then( -> esm.initialize(namespace))
-        .then( -> esm.add_event(namespace, 'p','a','t'))
-        .then( -> esm.count_events(namespace))
+        .then( -> esm.initialize(ns))
+        .then( -> esm.add_event(ns, 'p','a','t'))
+        .then( -> esm.count_events(ns))
         .then( (count) -> count.should.equal 1)
-        .then( -> esm.initialize(namespace))
-        .then( -> esm.count_events(namespace))
+        .then( -> esm.initialize(ns))
+        .then( -> esm.count_events(ns))
         .then( (count) -> count.should.equal 1)
 
       it 'should create resources for ESM namespace', ->
-        ns1 = "namespace1"
-        ns2 = "namespace2"
+        ns1 = random_namespace()
+        ns2 = random_namespace()
         esm = new_esm(ESM) #pass knex as it might be needed
         bb.all([esm.destroy(ns1), esm.destroy(ns2)])
         .then( -> bb.all([esm.initialize(ns1), esm.initialize(ns2)]) )
@@ -88,12 +102,17 @@ esm_tests = (ESM) ->
           c1.should.equal 2
           c2.should.equal 1
         )
+        .then( ->
+          clean(ns1)
+        )
+        .then( ->
+          clean(ns2)
+        )
 
       it 'should destroy should not break if resource does not exist', ->
-        namespace = "namespace"
         esm = new_esm(ESM)
-        esm.destroy(namespace)
-        .then( -> esm.destroy(namespace))
+        esm.destroy(ns)
+        .then( -> esm.destroy(ns))
 
   describe 'recommendation methods', ->
 

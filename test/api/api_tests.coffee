@@ -35,7 +35,7 @@ describe 'User recommendation routes', ->
       start_server.then(->
         client.create_namespace(ns)
       ).then(->
-        client.clear()
+        client.clear(ns)
       ).then(->
         bb.all([
           client.create_user(ns,'Edson','EdsonID')
@@ -206,13 +206,15 @@ describe 'User recommendation routes', ->
         r2[0].recommendations.should.be.instanceof(Array)
         r2[0].recommendations.length.should.be.greaterThan(5)
 
+      ).then(->
+        client.clear(ns)
       )
       .then(->
         client.destroy_namespace(ns)
       )
 
     it 'should not create things without namespace, thing, image, link', ->
-      ns = "comentarismo"
+      ns = random_namespace()
       t = undefined
       client.create_thing(ns, t, t ,t , t)
       .then( ->

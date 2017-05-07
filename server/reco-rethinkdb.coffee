@@ -39,7 +39,8 @@ class RethinkDBESM
   try_delete_table: (table, table_list) ->
     if table in table_list
       #DELETES all the events because drop and create are VERY slow
-      return @_r.table(table).delete().run().then(( ret ) -> true)
+#      return @_r.table(table).delete().run().then(( ret ) -> true)
+      @_r.tableDrop(table).run().then(( ret ) -> true)
     else
       return bb.try(-> false)
 

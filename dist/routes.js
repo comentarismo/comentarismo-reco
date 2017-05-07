@@ -37,7 +37,11 @@
           return cb(null, result);
         } else {
           ns_thing = t.thing;
-          return bb.all([Items.get(ns_thing).run()]).spread(function(doc) {
+          return bb.all([
+            Items.get(ns_thing).run({
+              durability: reco.esm._DURABILITY
+            })
+          ]).spread(function(doc) {
             t.thing = doc.thing;
             t.id = doc.id;
             if (doc.image) {
@@ -51,8 +55,8 @@
           })["catch"](thinky.Errors.ValidationError, function(err) {
             console.log("Validation Error: ", err.message);
             return Utils.resolveItems(namespace, result, count, cb);
-          })["catch"](function(error) {
-            console.log("Error: ", error.message);
+          })["catch"](function(err) {
+            console.log("Error: resolveItems, ", err.message);
             count = count + 1;
             return Utils.resolveItems(namespace, result, count, cb);
           });
@@ -62,9 +66,12 @@
   })(this);
 
   Utils.GetNamespace = function(request) {
-    if (request.query.namespace) {
+    if (request.query && request.query.namespace) {
       return request.query.namespace;
+    } else if (request.payload && request.payload.namespace) {
+      return request.payload.namespace;
     } else {
+      console.log("WARN: Could not GetNamespace, will be using default ", NAMESPACE);
       return NAMESPACE;
     }
   };
@@ -102,17 +109,21 @@
         path: '/',
         handler: (function(_this) {
           return function(request, reply) {
-            var namespace;
-            namespace = Utils.GetNamespace(request);
-            return bb.all([User.limit(50).run(), Items.limit(50).run()]).spread(function(users, items) {
+            return bb.all([
+              User.limit(50).run({
+                durability: reco.esm._DURABILITY
+              }), Items.limit(50).run({
+                durability: reco.esm._DURABILITY
+              })
+            ]).spread(function(users, items) {
               return reply.view("index", {
                 users: users,
                 items: items,
                 recommendations: []
               });
-            })["catch"](function(error) {
+            })["catch"](function(err) {
               return reply({
-                error: error
+                error: err
               }).code(500);
             });
           };
@@ -123,7 +134,9 @@
         path: '/health',
         handler: (function(_this) {
           return function(request, reply) {
-            return reco.esm._r.db('rethinkdb').table('server_status').run().then(function(status) {
+            return reco.esm._r.db('rethinkdb').table('server_status').run({
+              durability: reco.esm._DURABILITY
+            }).then(function(status) {
               return reply({
                 status: status,
                 ip: ip
@@ -139,17 +152,63 @@
       plugin.route({
         method: 'GET',
         path: '/clear',
+        config: {
+          validate: {
+            query: http_schema.namespace_request_schema
+          }
+        },
         handler: (function(_this) {
           return function(request, reply) {
-            return bb.all([User["delete"]().run(), Items["delete"]().run(), Likes["delete"]().run()]).spread(function(user, items, likes) {
+            return bb.all([
+              User.getAll(request.query.namespace, {
+                index: 'namespace'
+              })["delete"]().run({
+                durability: reco.esm._DURABILITY
+              }), Items.getAll(request.query.namespace, {
+                index: 'namespace'
+              })["delete"]().run({
+                durability: reco.esm._DURABILITY
+              }), Likes.getAll(request.query.namespace, {
+                index: 'namespace'
+              })["delete"]().run({
+                durability: reco.esm._DURABILITY
+              })
+            ]).spread(function(user, items, likes) {
               console.log("Removed  User, Items, Likes ", user, items, likes);
               return reply({
                 status: "ok",
                 ip: ip
               });
-            })["catch"](function(error) {
+            })["catch"](function(err) {
               return console.log("Error: ", err)(reply({
-                error: error
+                error: err
+              }).code(500));
+            });
+          };
+        })(this)
+      });
+      plugin.route({
+        method: 'GET',
+        path: '/clear_all',
+        handler: (function(_this) {
+          return function(request, reply) {
+            return bb.all([
+              User["delete"]().run({
+                durability: reco.esm._DURABILITY
+              }), Items["delete"]().run({
+                durability: reco.esm._DURABILITY
+              }), Likes["delete"]().run({
+                durability: reco.esm._DURABILITY
+              })
+            ]).spread(function(user, items, likes) {
+              console.log("Removed  User, Items, Likes ", user, items, likes);
+              return reply({
+                status: "ok",
+                ip: ip
+              });
+            })["catch"](function(err) {
+              return console.log("Error: ", err)(reply({
+                error: err
               }).code(500));
             });
           };
@@ -165,7 +224,9 @@
             return bb.all([
               User.get(userId).getJoin({
                 likes: true
-              }).run()
+              }).run({
+                durability: reco.esm._DURABILITY
+              })
             ]).spread(function(user) {
               return reply(user);
             })["catch"](thinky.Errors.ValidationError, function(err) {
@@ -173,10 +234,10 @@
               return reply({
                 error: err
               }).code(500);
-            })["catch"](function(error) {
+            })["catch"](function(err) {
               console.log("Error: ", err);
               return reply({
-                error: error
+                error: err
               }).code(500);
             });
           };
@@ -217,7 +278,7 @@
                 "id": result.id
               });
             })["catch"](thinky.Errors.ValidationError, function(err) {
-              console.log("Error: Validation -> ", namespace, ns_user, result.id, err.message);
+              console.log("Error: Validation -> ", namespace, ns_user, err.message);
               return reply({
                 error: err
               }).code(500);
@@ -255,6 +316,7 @@
           } else if (thing.indexOf(namespace) === -1) {
             ns_thing = namespace + "_" + thing;
           }
+          console.log("INFO: items/add ns_thing -> ", ns_thing);
           items = new Items({
             namespace: namespace,
             id: thinky.r.uuid(ns_thing),
@@ -309,7 +371,13 @@
             itemId = request.params.itemId;
             namespace = Utils.GetNamespace(request);
             console.log("GET /users/" + userId + "/like/" + itemId);
-            return bb.all([User.get(userId).run(), Items.get(itemId).run()]).spread(function(user, item) {
+            return bb.all([
+              User.get(userId).run({
+                durability: reco.esm._DURABILITY
+              }), Items.get(itemId).run({
+                durability: reco.esm._DURABILITY
+              })
+            ]).spread(function(user, item) {
               var likes, msg;
               if (user && item) {
                 likes = new Likes({
@@ -367,10 +435,10 @@
                   return reply({
                     error: err
                   }).code(500);
-                })["catch"](function(error) {
-                  console.log("Error: db.likes.insert ", userId, itemId, error);
+                })["catch"](function(err) {
+                  console.log("Error: db.likes.insert ", userId, itemId, err);
                   return reply({
-                    error: error
+                    error: err
                   }).code(500);
                 });
               } else {
@@ -382,10 +450,10 @@
                   message: msg
                 });
               }
-            })["catch"](function(error) {
-              console.log("Error:  db.likes.insert ", userId, itemId, error);
+            })["catch"](function(err) {
+              console.log("Error:  db.likes.insert ", userId, itemId, err);
               return reply({
-                error: error
+                error: err
               }).code(500);
             });
           };

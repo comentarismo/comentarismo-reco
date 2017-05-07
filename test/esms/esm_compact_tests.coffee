@@ -1,9 +1,9 @@
 esm_tests = (ESM) ->
-  ns = "default"
 
   describe 'ESM compacting database', ->
     describe '#compact_people', ->
       it 'should truncate the events of peoples history', ->
+        ns = random_namespace()
         init_esm(ESM,ns)
         .then (esm) ->
           bb.all([
@@ -30,7 +30,8 @@ esm_tests = (ESM) ->
 
 
       it 'should truncate people by action', ->
-        init_esm(ESM)
+        ns = random_namespace()
+        init_esm(ESM,ns)
         .then (esm) ->
           bb.all([
 
@@ -62,7 +63,8 @@ esm_tests = (ESM) ->
 
     describe '#compact_things', ->
       it 'should truncate the events of things history', ->
-        init_esm(ESM)
+        ns = random_namespace()
+        init_esm(ESM,ns)
         .then (esm) ->
           bb.all([
             esm.add_event(ns, 'p1','view','t1')
@@ -87,7 +89,8 @@ esm_tests = (ESM) ->
           )
 
       it 'should truncate things by action', ->
-        init_esm(ESM)
+        ns = random_namespace()
+        init_esm(ESM,ns)
         .then (esm) ->
           bb.all([
 

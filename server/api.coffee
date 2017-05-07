@@ -129,6 +129,8 @@ API =
         thing = request.payload.thing
         namespace = request.payload.namespace
         configuration = _.defaults(request.payload.configuration, default_configuration)
+        
+        return Errors.handle_error(request, err, reply) if namespace == 'undefined'
 
         reco.namespace_exists(namespace)
         .then( (exists) ->

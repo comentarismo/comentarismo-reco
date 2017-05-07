@@ -155,6 +155,9 @@
             thing = request.payload.thing;
             namespace = request.payload.namespace;
             configuration = _.defaults(request.payload.configuration, default_configuration);
+            if (namespace === 'undefined') {
+              return Errors.handle_error(request, err, reply);
+            }
             return reco.namespace_exists(namespace).then(function(exists) {
               var promise;
               if (!exists) {

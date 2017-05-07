@@ -66,7 +66,7 @@
 
     RethinkDBESM.prototype.try_delete_table = function(table, table_list) {
       if (indexOf.call(table_list, table) >= 0) {
-        return this._r.table(table)["delete"]().run().then(function(ret) {
+        return this._r.tableDrop(table).run().then(function(ret) {
           return true;
         });
       } else {

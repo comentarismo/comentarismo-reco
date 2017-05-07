@@ -3,7 +3,7 @@ should = chai.should()
 global.assert = chai.assert
 
 #global._ = require 'underscore'
-global._ = require 'lodash'
+_ = global._ = require 'lodash'
 
 global.RethinkDBESM = require '../../server/reco-rethinkdb'
 global.MemESM = require '../../server/basic_in_memory_esm'
@@ -63,3 +63,12 @@ bb.all([
     .then( (esm) -> new RECO(esm))
 
 )
+
+
+global.clean = (namespace = global.default_namespace) ->
+  esm.destroy(namespace)
+  
+
+
+global.random_namespace = ->
+  "namespace_#{_.random(0, 99999999)}"

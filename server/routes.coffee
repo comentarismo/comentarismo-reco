@@ -35,7 +35,7 @@ Utils.resolveItems = (namespace,result, count, cb) =>
       ns_thing = t.thing
 #
       bb.all([
-        Items.get(ns_thing).run()
+        Items.get(ns_thing).run({durability: reco.esm._DURABILITY})
       ]).spread(( doc) ->
         t.thing = doc.thing
         t.id = doc.id
@@ -46,16 +46,19 @@ Utils.resolveItems = (namespace,result, count, cb) =>
       ).catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " , err.message)
           Utils.resolveItems(namespace,result, count, cb)
-      ).catch((error) ->
-        console.log("Error: " , error.message)
+      ).catch((err) ->
+        console.log("Error: resolveItems, " , err.message)
         count = count + 1
         Utils.resolveItems(namespace,result, count, cb)
       )
 
 Utils.GetNamespace = (request) ->
-    if request.query.namespace
+    if request.query && request.query.namespace
       request.query.namespace
+    else if request.payload && request.payload.namespace
+      request.payload.namespace
     else
+      console.log("WARN: Could not GetNamespace, will be using default ", NAMESPACE)
       NAMESPACE
 
 
@@ -96,14 +99,14 @@ ROUTES =
       handler: (request, reply) =>
 #    // load stuff from database
 #        TODO: #4 enable namespace filter
-        namespace = Utils.GetNamespace(request)
+        #namespace = Utils.GetNamespace(request)
         bb.all([
-          User.limit(50).run()
-          Items.limit(50).run()
+          User.limit(50).run({durability: reco.esm._DURABILITY})
+          Items.limit(50).run({durability: reco.esm._DURABILITY})
         ]).spread((users , items) ->
           reply.view("index", {users:users, items:items, recommendations:[]})
-        ).catch((error) =>
-          reply({error: error}).code(500)
+        ).catch((err) =>
+          reply({error: err}).code(500)
         )
     )
 
@@ -115,7 +118,7 @@ ROUTES =
 #        TODO: #4 enable namespace filter ?
 #        namespace = Utils.GetNamespace(request)
 
-        reco.esm._r.db('rethinkdb').table('server_status').run().then((status) ->
+        reco.esm._r.db('rethinkdb').table('server_status').run({durability: reco.esm._DURABILITY}).then((status) ->
           reply({status: status, ip: ip})
         ).catch((err) -> console.log("Error: ",err) reply({error: err}).code(500) )
     )
@@ -125,16 +128,34 @@ ROUTES =
     plugin.route(
       method: 'GET',
       path: '/clear',
+      config:
+        validate:
+          query: http_schema.namespace_request_schema,
       handler: (request, reply) =>
         bb.all([
-            User.delete().run()
-            Items.delete().run()
-            Likes.delete().run()
+            User.getAll(request.query.namespace, {index: 'namespace'}).delete().run({durability: reco.esm._DURABILITY})
+            Items.getAll(request.query.namespace, {index: 'namespace'}).delete().run({durability: reco.esm._DURABILITY})
+            Likes.getAll(request.query.namespace, {index: 'namespace'}).delete().run({durability: reco.esm._DURABILITY})
         ]).spread((user , items , likes) ->
             console.log("Removed  User, Items, Likes ", user, items, likes)
             reply({status: "ok", ip: ip})
-        ).catch((error) -> console.log("Error: ",err) reply({error: error}).code(500))
+        ).catch((err) -> console.log("Error: ",err) reply({error: err}).code(500))
     )
+  
+    plugin.route(
+      method: 'GET',
+      path: '/clear_all',
+      handler: (request, reply) =>
+        bb.all([
+          User.delete().run({durability: reco.esm._DURABILITY})
+          Items.delete().run({durability: reco.esm._DURABILITY})
+          Likes.delete().run({durability: reco.esm._DURABILITY})
+        ]).spread((user , items , likes) ->
+          console.log("Removed  User, Items, Likes ", user, items, likes)
+          reply({status: "ok", ip: ip})
+        ).catch((err) -> console.log("Error: ",err) reply({error: err}).code(500))
+    )
+    
 
     ########### NAMESPACE routes Get user likes (current) ################
 
@@ -147,15 +168,15 @@ ROUTES =
         userId = request.params.userId
 
         bb.all([
-          User.get(userId).getJoin({likes:true}).run()
+          User.get(userId).getJoin({likes:true}).run({durability: reco.esm._DURABILITY})
         ]).spread((user) ->
           reply(user)
         ).catch(thinky.Errors.ValidationError, (err) ->
           console.log("Validation Error: " + err.message)
           reply({error: err}).code(500)
-        ).catch((error) ->
+        ).catch((err) ->
           console.log("Error: ",err)
-          reply({error: error}).code(500)
+          reply({error: err}).code(500)
         )
     )
 
@@ -191,7 +212,7 @@ ROUTES =
           console.log("/users/add saved -> ",namespace, ns_user, result.id)
           reply({message: "ok", "id":result.id})
         ).catch(thinky.Errors.ValidationError, (err) ->
-          console.log("Error: Validation -> ",namespace, ns_user, result.id, err.message)
+          console.log("Error: Validation -> ",namespace, ns_user, err.message)
           reply({error: err}).code(500)
         ).catch((err) ->
           #Unexpected error
@@ -224,8 +245,9 @@ ROUTES =
           ns_thing = namespace + "_" + id
         else if thing.indexOf(namespace) == -1
           ns_thing = namespace + "_" + thing
-
-#        console.log("Will save thing :O -> ", ns_thing)
+          
+          
+        console.log("INFO: items/add ns_thing -> ", ns_thing)
 
         items   = new Items({
           namespace : namespace,
@@ -278,8 +300,8 @@ ROUTES =
         console.log("GET /users/#{userId}/like/#{itemId}")
 
         bb.all([
-          User.get(userId).run()
-          Items.get(itemId).run()
+          User.get(userId).run({durability: reco.esm._DURABILITY})
+          Items.get(itemId).run({durability: reco.esm._DURABILITY})
         ])
         .spread((user , item) ->
           if (user and item)
@@ -323,9 +345,9 @@ ROUTES =
                 console.log("Error: ValidationError db.likes.insert ", userId, itemId, err)
                 reply({error: err}).code(500)
               )
-              .catch((error) ->
-                console.log("Error: db.likes.insert ", userId, itemId, error)
-                reply({error: error}).code(500)
+              .catch((err) ->
+                console.log("Error: db.likes.insert ", userId, itemId, err)
+                reply({error: err}).code(500)
               )
           else
             msg = util.format("Error: User %s already liked item %s", userId, itemId)
@@ -334,9 +356,9 @@ ROUTES =
             console.log("==========")
             reply({message: msg})
         )
-        .catch((error) ->
-          console.log("Error:  db.likes.insert ", userId, itemId, error)
-          reply({error: error}).code(500)
+        .catch((err) ->
+          console.log("Error:  db.likes.insert ", userId, itemId, err)
+          reply({error: err}).code(500)
         )
     )
 

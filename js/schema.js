@@ -24,7 +24,12 @@ var Schema = function(thinky){
     Likes.belongsTo(Items, 'items', 'itemId', 'id');
     User.hasMany(Likes, 'likes', 'id', 'userId');
     Items.hasMany(Likes, 'likes', 'id', 'itemId');
-
+    
+    Likes.ensureIndex("namespace")
+    User.ensureIndex("namespace")
+    Items.ensureIndex("namespace")
+    
+    
     var schema = {
         Items: Items,
         Likes: Likes,

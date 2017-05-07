@@ -160,15 +160,15 @@ class RECOClient
   user_likes: (namespace, user) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/users/#{user}/likes"
+      uri: "#{@server_uri}/users/#{user}/likes?namespace=#{namespace}"
     }
     request(req)
       .then(process_response)
 
-  clear:() ->
+  clear:(namespace) ->
     req = {
       method: "GET",
-      uri: "#{@server_uri}/clear"
+      uri: "#{@server_uri}/clear?namespace=#{namespace}"
     }
     request(req)
     .then(process_response)
