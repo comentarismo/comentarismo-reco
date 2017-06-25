@@ -27,12 +27,14 @@ ServerRecommendationEngine = require('../../server/server.coffee')
 RETHINKDB_HOST = process.env.RETHINKDB_HOST || 'g7-box'
 RETHINKDB_PORT = process.env.RETHINKDB_PORT || 28015
 RETHINKDB_DB = process.env.RETHINKDB_DB || 'hapiger_it'
+RETHINKDB_PASSWORD = process.env.RETHINKDB_PASSWORD || ''
 
 global.server = new ServerRecommendationEngine({
   esm: 'rethinkdb', esmoptions: {
     "host": RETHINKDB_HOST,
     "port": RETHINKDB_PORT,
-    "db": RETHINKDB_DB
+    "db": RETHINKDB_DB,
+    'password': RETHINKDB_PASSWORD,
   }
 })
 #

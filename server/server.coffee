@@ -25,6 +25,8 @@ CACHE_ENABLED = process.env.CACHE_ENABLED || false
 
 RETHINKDB_HOST = process.env.RETHINKDB_HOST || 'g7-box'
 RETHINKDB_PORT = process.env.RETHINKDB_PORT || 28015
+RETHINKDB_PASSWORD = process.env.RETHINKDB_PASSWORD || ''
+
 RETHINKDB_DB = process.env.RETHINKDB_DB || 'hapiger_it'
 RETHINKDB_TIMEOUT = process.env.RETHINKDB_TIMEOUT || 120000
 RETHINKDB_BUFFER = process.env.RETHINKDB_BUFFER || 10
@@ -57,7 +59,7 @@ class ServerRecommendationEngine
         @_esm = new MemESM({})
         @_reco = new RECO(@_esm, @options)
       when 'rethinkdb'
-        r = r({ host: RETHINKDB_HOST, port: RETHINKDB_PORT, db: RETHINKDB_DB, timeout: RETHINKDB_TIMEOUT, buffer: RETHINKDB_BUFFER, max: RETHINKDB_MAX})
+        r = r({ host: RETHINKDB_HOST, port: RETHINKDB_PORT, db: RETHINKDB_DB, timeout: RETHINKDB_TIMEOUT, password: RETHINKDB_PASSWORD, buffer: RETHINKDB_BUFFER, max: RETHINKDB_MAX})
         @_esm = new RethinkDBESM({r: r}, NamespaceDoestNotExist)
         @_reco = new RECO(@_esm, @options)
 

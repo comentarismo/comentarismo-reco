@@ -16,13 +16,15 @@ global.NamespaceDoestNotExist = Errors.NamespaceDoestNotExist
 
 RETHINKDB_HOST = process.env.RETHINKDB_HOST || 'g7-box'
 RETHINKDB_PORT = process.env.RETHINKDB_PORT || 28015
+RETHINKDB_PASSWORD = process.env.RETHINKDB_PASSWORD || ''
+
 RETHINKDB_DB = process.env.RETHINKDB_DB || 'hapiger_it'
 RETHINKDB_TIMEOUT = process.env.RETHINKDB_TIMEOUT || 120000
 RETHINKDB_BUFFER = process.env.RETHINKDB_BUFFER || 10
 RETHINKDB_MAX = process.env.RETHINKDB_MAX || 50
 
 
-r = rethinkdbdash({ host: RETHINKDB_HOST, port: RETHINKDB_PORT, db: RETHINKDB_DB, timeout: RETHINKDB_TIMEOUT, buffer: RETHINKDB_BUFFER, max: RETHINKDB_MAX})
+r = rethinkdbdash({ host: RETHINKDB_HOST, port: RETHINKDB_PORT, password: RETHINKDB_PASSWORD, db: RETHINKDB_DB, timeout: RETHINKDB_TIMEOUT, buffer: RETHINKDB_BUFFER, max: RETHINKDB_MAX})
 global.bb = require 'bluebird'
 
 global.moment = require "moment"
